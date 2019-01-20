@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.PotteryFragment">
+
+    <data>
+
+        <variable
+            name="pottery"
+            type="com.example.arsalan.kavosh.model.SurFoundPottery" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تعداد:" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:text="@={pottery.quantity}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="نوع:" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/array_pottery_type"
+            android:selectedItemPosition="@={pottery.type}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="وضعیت یافته" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/txtCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={pottery.condition}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="دوره احتمالی" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/txtAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={pottery.age}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="موقعیت پراکندگی:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionAll}"
+                android:text="سطح" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkCenter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionCenter}"
+                android:text="مرکز" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionN}"
+                android:text="شمال" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionS}"
+                android:text="جنوب" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkNE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionNE}"
+                android:text="شمال شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkNW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionNW}"
+                android:text="شمال غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkSE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionSE}"
+                android:text="جنوب شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkSW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionSW}"
+                android:text="جنوب غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionE}"
+                android:text="شرق" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.dispersionW}"
+                android:text="غرب" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="موقعیت تراکم:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityAll}"
+                android:text="سطح" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityCenter}"
+                android:text="مرکز" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityN}"
+                android:text="شمال" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityS}"
+                android:text="جنوب" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityNE}"
+                android:text="شمال شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityNW}"
+                android:text="شمال غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densitySE}"
+                android:text="جنوب شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densitySW}"
+                android:text="جنوب غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityE}"
+                android:text="شرق" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={pottery.densityW}"
+                android:text="غرب" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تعداد نمونه:" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={pottery.sampleQuantity}" />
+
+    </LinearLayout>
+</layout>

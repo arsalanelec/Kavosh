@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".dialog.AddDestructionDialog">
+
+    <data>
+
+        <variable
+            name="destruction"
+            type="com.example.arsalan.kavosh.model.Destruction" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/dialog_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تخریب" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="در جهت:" />
+
+                <Spinner
+                    android:id="@+id/spnCoordination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_coordination_2" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="عامل تخریب:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spnDestructionType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/array_destruction_type" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/etDestruction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="میزان تخریب:" />
+
+                <Spinner
+                    android:id="@+id/spnDestructionLevel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_destruction_level" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="انصراف" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="تایید" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

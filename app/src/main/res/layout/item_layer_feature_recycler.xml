@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="layerFeature"
+            type="com.example.arsalan.kavosh.model.LayerFeature" />
+
+        <variable
+            name="itemClickListener"
+            type="com.example.arsalan.kavosh.fragment.FeatureLayerListFragment.LayerFeatureClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:layoutDirection="rtl"
+        android:onClick="@{()->itemClickListener.onLayerFeatureClick(layerFeature)}"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@{layerFeature.type==1 ? @string/layer: @string/feature}"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@{layerFeature.name}"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text='@{layerFeature.status==1 ? "باز":"بسته"}'
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

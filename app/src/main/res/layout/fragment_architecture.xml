@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.ArchitectureFragment">
+
+    <data>
+
+        <variable
+            name="architecture"
+            type="com.example.arsalan.kavosh.model.SurFoundArchitecture" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="وضعیت یافته" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/txtCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={architecture.condition}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="جنس یافته" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/txtMaterial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={architecture.material}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="دوره احتمالی" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/txtAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={architecture.age}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="موقعیت پراکندگی:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionAll}"
+                android:text="سطح" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkCenter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionCenter}"
+                android:text="مرکز" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionN}"
+                android:text="شمال" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionS}"
+                android:text="جنوب" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkNE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionNE}"
+                android:text="شمال شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkNW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionNW}"
+                android:text="شمال غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkSE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionSE}"
+                android:text="جنوب شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkSW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionSW}"
+                android:text="جنوب غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionE}"
+                android:text="شرق" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/chkW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.dispersionW}"
+                android:text="غرب" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="موقعیت تراکم:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityAll}"
+                android:text="سطح" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityCenter}"
+                android:text="مرکز" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityN}"
+                android:text="شمال" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityS}"
+                android:text="جنوب" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityNE}"
+                android:text="شمال شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityNW}"
+                android:text="شمال غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densitySE}"
+                android:text="جنوب شرقی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densitySW}"
+                android:text="جنوب غربی" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityE}"
+                android:text="شرق" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:checked="@={architecture.densityW}"
+                android:text="غرب" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="کاربری:" />
+
+        <AutoCompleteTextView
+            android:id="@+id/txtUsage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={architecture.usage}" />
+
+        <TextView
+            style="@style/text_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ابعاد:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="در جهت " />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/array_coordination"
+                android:selectedItemPosition="@={architecture.direction1}" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:selectAllOnFocus="true"
+                android:text="@={architecture.lenght1}" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" متر" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="در جهت " />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/array_coordination"
+                android:selectedItemPosition="@={architecture.direction2}" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:selectAllOnFocus="true"
+                android:text="@={architecture.lenght2}" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" متر" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

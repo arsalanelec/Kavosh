@@ -1,0 +1,314 @@
+<resources>
+    <string name="app_name">کاوشگر</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">در حال ساخت...</string>
+    <string-array name="edu_degree">
+        <item id="1">دکترا</item>
+        <item id="2">کارشناسی ارشد</item>
+        <item id="3">کارشناسی</item>
+        <item id="4">فوق دیپلم</item>
+        <item id="5">سایر</item>
+    </string-array>
+
+    <string-array name="array_excave_item_type">
+        <item id="1">کارگاه</item>
+        <item id="2">گمانه</item>
+        <item id="3">ترانشه</item>
+    </string-array>
+
+
+    <string-array name="array_feature_structure_type">
+        <item>دیوار</item>
+        <item>پی دیوار</item>
+        <item>کف</item>
+        <item>پله</item>
+        <item>اجاق</item>
+        <item>آتشدان</item>
+        <item>کوره</item>
+        <item>چاله تدفین</item>
+        <item>توده خاکستر</item>
+        <item>توده سنگ</item>
+        <item>توده سفال</item>
+        <item>نخاله</item>
+        <item>آوار</item>
+        <item>دیگر</item>
+    </string-array>
+
+    <string-array name="array_feature_wall_type">
+        <item>دیوار اتاق</item>
+        <item>دیوار کوچه</item>
+        <item>دیوار حیاط</item>
+        <item>حصار</item>
+    </string-array>
+
+    <string-array name="array_feature_floor_type">
+        <item>اتاق</item>
+        <item>کوچه</item>
+        <item>حیاط</item>
+    </string-array>
+
+    <string-array name="array_feature_floor_struct">
+        <item>خاک کوبیده</item>
+        <item>روکش گل</item>
+        <item>گچ</item>
+        <item>سنگ</item>
+        <item>خشت</item>
+        <item>آجر</item>
+        <item>موزاییک</item>
+        <item>سفال</item>
+        <item>ریگ(شن)</item>
+    </string-array>
+
+    <string-array name="array_feature_floor_surface">
+        <item>هموار</item>
+        <item>ناهموار</item>
+        <item>آسیب دیده</item>
+    </string-array>
+
+    <string-array name="array_feature_wall_structure_type">
+        <item>چینه ای</item>
+        <item>خشتی</item>
+        <item>آجری</item>
+        <item>سنگی</item>
+    </string-array>
+
+    <string-array name="array_found_container_type">
+        <item id="1">بسته</item>
+        <item id="2">کیسه</item>
+        <item id="3">قطعه</item>
+        <item id="4">پاکت</item>
+    </string-array>
+
+    <string-array name="array_found_type">
+        <item id="1">انسان ساخت</item>
+        <item id="2">بوم ساخت</item>
+        <item id="3">باور ساخت</item>
+    </string-array>
+
+    <string-array name="array_cm_mm">
+        <item id="1">سانتی متر</item>
+        <item id="2">میلیمتر</item>
+    </string-array>
+    <string-array name="array_excave_sub_item_type">
+        <item id="2">گمانه</item>
+        <item id="3">ترانشه</item>
+    </string-array>
+
+    <string-array name="array_accumulation">
+        <item id="1">طبیعی:دارای رگه های منظم باریک و افقی که بوسیله باران ایجاد شده</item>
+        <item id="2">طبیعی:بصورت توده ای</item>
+        <item id="3">عمدی</item>
+    </string-array>
+
+    <string-array name="array_coordination">
+        <item id="5">شمال</item>
+        <item id="6">جنوب</item>
+        <item id="1">شمال غربی</item>
+        <item id="2">شمالی شرقی</item>
+        <item id="3">جنوب غربی</item>
+        <item id="4">جنوب شرقی</item>
+        <item id="5">غرب</item>
+        <item id="6">شرق</item>
+    </string-array>
+
+    <string-array name="array_reference">
+        <item id="1">آبهای آزاد</item>
+        <item id="2">بنچ مارک اصلی</item>
+        <item id="3">بیس فرعی</item>
+    </string-array>
+
+    <string-array name="array_layer_contexture">
+        <item id="1">متراکم قلوه کند</item>
+        <item id="2">متراکم رسوبی</item>
+        <item id="3">متراکم ترد</item>
+        <item id="4">متخلخل قلوه کند</item>
+        <item id="5">متخلخل رسوبی</item>
+        <item id="6">متخلخل ترد</item>
+    </string-array>
+
+    <string-array name="array_soil_color">
+        <item id="1">قهوه ای تیره</item>
+        <item id="2">قهوه ای روشن</item>
+        <item id="3">خاکستری تیره</item>
+        <item id="4">خاکستری روشن</item>
+        <item id="5">سیاه تیره</item>
+        <item id="6">سیاه روشن</item>
+        <item id="7">نخودی تیره</item>
+        <item id="8">نخودی روشن</item>
+    </string-array>
+
+    <string-array name="array_shape">
+        <item id="1">نامنظم</item>
+        <item id="2">گرد</item>
+        <item id="3">چندوجهی</item>
+        <item id="4">استوانه ای</item>
+    </string-array>
+
+    <string-array name="array_tools">
+        <item id="1">کلنگ کوچک و کمچه</item>
+        <item id="2">کلنگ بزرگ و بیل</item>
+        <item id="3">پنس و فرچه</item>
+    </string-array>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="feature">فیچر</string>
+    <string name="layer">لایه</string>
+
+    <string-array name="array_survey_type">
+        <item>تپه</item>
+        <item>محوطه</item>
+        <item>قبرستان</item>
+        <item>بنا</item>
+        <item>تپه قبرستان</item>
+        <item>قلعه</item>
+        <item>غار</item>
+        <item>پناهگاه صخره ای</item>
+        <item>بافت تاریخی فرهنگی</item>
+        <item>نقش برجسته</item>
+        <item>نقوش صخره ای</item>
+        <item>مجموعه باستانی و تاریخی-فرهنگی</item>
+        <item>استودان</item>
+    </string-array>
+
+
+    <string-array name="array_road_type">
+        <item>جاده آسفالته</item>
+        <item>جاده خاکی</item>
+        <item>راه مالرو</item>
+    </string-array>
+
+    <string-array name="array_vegetation_type">
+        <item id="1">کشاورزی</item>
+        <item id="2">جنگلی</item>
+        <item id="5">مرتع</item>
+        <item id="6">بایر</item>
+    </string-array>
+
+    <string-array name="array_around_feature_type">
+        <item>ناهموار</item>
+        <item>مسطح</item>
+        <item>دارای پستی و بلندی</item>
+        <item>در شیب</item>
+        <item>در دامنه</item>
+    </string-array>
+
+    <string-array name="array_arc_condition">
+        <item>مخروبه</item>
+        <item>سرپا</item>
+        <item>بازسازی شده</item>
+        <item>شواهد معماری</item>
+    </string-array>
+
+    <string-array name="array_arc_material">
+        <item>خشتی</item>
+        <item>چینه ای</item>
+        <item>آجری</item>
+        <item>سنگی</item>
+        <item>گچی</item>
+    </string-array>
+
+    <string-array name="array_arc_usage">
+        <item>نامشخص</item>
+        <item>مذهبی-مسجد</item>
+        <item>مذهبی-کلیسا</item>
+        <item>مذهبی-معبد</item>
+        <item>کاخ</item>
+        <item>کوره</item>
+        <item>پل</item>
+        <item>بند</item>
+
+    </string-array>
+    <string-array name="array_sur_found_type">
+        <item id="1">معماری</item>
+        <item id="2">سفال</item>
+        <item id="5">ابزار سنگی</item>
+        <item id="6">فلز</item>
+        <item id="6">سکه</item>
+        <item id="6">سرباره کوره</item>
+        <item id="6">جوش کوره</item>
+    </string-array>
+
+    <string-array name="array_coordination_2">
+        <item>شمال</item>
+        <item>جنوب</item>
+        <item id="1">شمال غربی</item>
+        <item id="2">شمالی شرقی</item>
+        <item id="3">جنوب غربی</item>
+        <item id="4">جنوب شرقی</item>
+        <item id="5">غرب</item>
+        <item id="6">شرق</item>
+        <item id="7">سطح</item>
+        <item id="8">مرکز</item>
+    </string-array>
+
+    <string-array name="array_pottery_type">
+        <item>ساده</item>
+        <item>منقوش</item>
+        <item>لعابدار ساده</item>
+        <item>لعابدار منقوش</item>
+    </string-array>
+
+    <string-array name="array_pottery_condition">
+        <item>قطعه سفال</item>
+        <item>ظرف سفالی سالم</item>
+        <item>ظرف سفالی ناقص</item>
+        <item>ظرف سفالی شکسته</item>
+    </string-array>
+
+    <string-array name="array_stony_tool_condition">
+        <item>قطع ابزار</item>
+        <item>ظرف ابزاری سالم</item>
+        <item>ظرف ابزاری ناقص</item>
+        <item>ظرف ابزاری شکسته</item>
+    </string-array>
+
+    <string-array name="array_stony_tool_type">
+        <item>تیغه</item>
+        <item>ریز تیغه</item>
+        <item>سنگ مادر</item>
+    </string-array>
+
+    <string-array name="array_hill_side_shape">
+        <item>گرد</item>
+        <item>بیضی</item>
+        <item>مستطیل</item>
+        <item>مربع</item>
+    </string-array>
+    <string-array name="array_hill_side_level">
+        <item>ملایم</item>
+        <item>تند</item>
+        <item>عمودی</item>
+    </string-array>
+
+    <string-array name="array_destruction_level">
+        <item>سطحی</item>
+        <item>کم</item>
+        <item>زیاد</item>
+        <item>بسیار زیاد</item>
+    </string-array>
+
+    <string-array name="array_destruction_type">
+        <item>انسانی</item>
+        <item>طبیعی</item>
+    </string-array>
+
+    <string-array name="array_destruction_factor">
+        <item>حیوانات</item>
+        <item>گیاهان</item>
+        <item>باران و سیل</item>
+        <item>رودخانه</item>
+        <item>کشاورزی</item>
+        <item>منازل مسکونی</item>
+        <item>توصعه صنعتی</item>
+        <item>باغات</item>
+    </string-array>
+
+    <string name="title_activity_show_picture">نمایش عکس</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_gallery">GalleryActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+</resources>

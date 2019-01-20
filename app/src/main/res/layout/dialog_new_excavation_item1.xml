@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".dialog.NewExcavationItem1Dialog">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:layoutDirection="rtl"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:paddingStart="16dp"
+            android:text="ایجاد کارگاه"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+
+                <Spinner
+                    android:id="@+id/spn_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_excave_item_type" />
+
+                <EditText
+                    android:id="@+id/etWorkshopTrenchTrialName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="نام کارگاه/گمانه/ترانشه را وارد نمایید..."
+                    android:inputType="textPersonName"
+                    android:selectAllOnFocus="true" />
+
+                <Spinner
+                    android:id="@+id/spn_sub_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_excave_sub_item_type" />
+
+                <EditText
+                    android:id="@+id/etTrenchTrialName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="نام گمانه/ترانشه را وارد نمایید..."
+                    android:inputType="textPersonName"
+                    android:selectAllOnFocus="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="سرپرست:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSearchUser"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+
+                        android:drawableStart="@drawable/ic_search_24dp"
+                        android:gravity="center" />
+
+                    <EditText
+                        android:id="@+id/etNatId"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:hint="کد ملی سرپرست را وارد نمایید..."
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="10" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="نام سرپرست:" />
+
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_back_green"
+                    android:gravity="center"
+                    android:text="نامعلوم"
+                    android:textColor="@color/action"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="شماره گذاری لایه/فیچر از:" />
+
+                <EditText
+                    android:id="@+id/etLayerCoding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType=""
+                    android:layoutDirection="ltr"
+                    android:selectAllOnFocus="true" />
+
+                <TextView
+                    android:id="@+id/txtLayerCodingSample"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="ltr"
+                    android:text="نمونه:"
+                    android:textColor="@android:color/darker_gray" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="شماره گذاری ثبتی از:" />
+
+                <EditText
+                    android:id="@+id/etRegistrationCoding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType=""
+                    android:layoutDirection="ltr"
+                    android:selectAllOnFocus="true" />
+
+                <TextView
+                    android:id="@+id/txtFeatureCodingSample"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="ltr"
+                    android:text="نمونه:"
+                    android:textColor="@android:color/darker_gray" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray"
+            android:elevation="2dp"
+            android:padding="16dp">
+
+            <Button
+                android:id="@+id/btnCreate"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:background="@color/action"
+                android:text="ایجاد" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="انصراف" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

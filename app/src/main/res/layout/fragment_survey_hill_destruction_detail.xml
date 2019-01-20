@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.SurveyHillDestructionDetailFragment">
+
+    <data>
+
+        <variable
+            name="surHillDestructionDetail"
+            type="com.example.arsalan.kavosh.model.SurHillDestructionDetail" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تخمین ابعاد تپه (قبل از تخریب)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="شمالی-جنوبی " />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal"
+                    android:text="@={surHillDestructionDetail.nsLenght}" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="متر " />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="شرقی-غربی " />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal"
+                    android:text="@={surHillDestructionDetail.ewLenght}" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="متر " />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="بیشترین ارتفاع نسبت به اطراف " />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="numberDecimal"
+                    android:text="@={surHillDestructionDetail.height}" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="متر " />
+            </LinearLayout>
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تخریب در:" />
+
+            <LinearLayout
+                android:id="@+id/llDestruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnAddDestruction"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:layout_margin="8dp"
+                android:background="@color/action"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="قسمت دست نخورده:" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactAll}"
+                    android:text="سطح" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkCenter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactCenter}"
+                    android:text="مرکز" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactN}"
+                    android:text="شمال" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactS}"
+                    android:text="جنوب" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkNE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactNE}"
+                    android:text="شمال شرقی" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkNW"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactNW}"
+                    android:text="شمال غربی" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkSE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactSE}"
+                    android:text="جنوب شرقی" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkSW"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactSW}"
+                    android:text="جنوب غربی" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkE"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactE}"
+                    android:text="شرق" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkW"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checked="@={surHillDestructionDetail.intactW}"
+                    android:text="غرب" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="audio"
+            type="com.example.arsalan.kavosh.model.AudioMemo" />
+
+        <variable
+            name="file"
+            type="com.example.arsalan.kavosh.model.FileDownloaded" />
+
+        <variable
+            name="onAudioClickListener"
+            type="com.example.arsalan.kavosh.interfaces.AudioMemoEventListener.AudioItemClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <FrameLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/pbLoading"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@android:color/white"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="@{file.progress>100?100:file.progress}"
+                android:visibility="@{file.finished ? View.GONE : View.VISIBLE}" />
+
+            <ToggleButton
+                android:id="@+id/tgbPlayPause"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/back_play_pause"
+                android:onCheckedChanged="@{(button,bool)->onAudioClickListener.onPlayPauseChanged(button,bool,file)}"
+                android:textOff=""
+                android:textOn=""
+                android:visibility="@{file.finished ? View.VISIBLE : View.GONE}" />
+
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@{audio.title}"
+            android:textColor="@color/colorPrimaryDark" />
+    </LinearLayout>
+</layout>

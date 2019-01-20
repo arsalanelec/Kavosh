@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.SurveyPropertiesFragment">
+
+    <data>
+
+        <variable
+            name="surveyDetail"
+            type="com.example.arsalan.kavosh.model.SurveyDetail" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:orientation="vertical"
+                android:paddingBottom="100dp">
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="شاخصه های جغرافیایی:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/list_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="نام" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/gray" />
+
+
+                    <TextView
+                        style="@style/list_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="فاصله" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/gray" />
+
+                    <TextView
+                        style="@style/list_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="جهت" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/gray" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutGeoFeature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/btnAddGeoFeature"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:background="@color/action"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="دسترسی از طریق:" />
+
+                    <Spinner
+                        android:id="@+id/spnRoadType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/array_road_type"
+                        android:selectedItemPosition="@={surveyDetail.accessibleRoadType}" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نام مسیر:" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="مبدا-مقصد..."
+                        android:text="@={surveyDetail.accessibleRoadName}" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="فاصله تا اثر:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="متر" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:text="@={surveyDetail.accessibleRoadDistanceString}" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="در جهت" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/array_coordination"
+                            android:selectedItemPosition="@={surveyDetail.accessibleRoadCoordination}" />
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نام منبع تهیه آب اثر:" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="منبع تامین آب..."
+                        android:text="@={surveyDetail.waterResourceName}" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="فاصله تا اثر:" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="متر" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:text="@={surveyDetail.waterResourceDistanceString}" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="در جهت" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/array_coordination"
+                            android:selectedItemPosition="@={surveyDetail.waterResourceCoordination}" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="توضیحات بیشتر برای منابع آب..."
+                        android:text="@={surveyDetail.waterResourceDescription}" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="پوشش گیاهی زمین های اطراف:" />
+
+                    <LinearLayout
+                        android:id="@+id/llVegetation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/btnAddVegetation"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        android:background="@color/action"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        style="@style/text_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="عوارض اطراف:" />
+
+                    <LinearLayout
+                        android:id="@+id/llAroundFeature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/btnAddAroundFeature"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        android:background="@color/action"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="توضیحات:" />
+
+                <EditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="توضیحات..."
+                    android:inputType="textMultiLine"
+                    android:minLines="3" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="تصاویر:"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvGallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="یادداشت های صوتی:"
+                    android:textColor="@color/colorPrimaryDark" />
+
+                <LinearLayout
+                    android:id="@+id/llAudioList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddPhoto"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:layout_margin="4dp"
+            android:background="@color/action"
+            android:src="@drawable/ic_add_a_photo_24dp"
+            android:textColor="@android:color/white"
+            app:useCompatPadding="true" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddAudio"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="4dp"
+            android:background="@color/action"
+            android:src="@drawable/ic_keyboard_voice_24dp"
+            android:text="+ یادداشت صوتی"
+            android:textColor="@android:color/white"
+            app:useCompatPadding="true" />
+    </FrameLayout>
+</layout>
