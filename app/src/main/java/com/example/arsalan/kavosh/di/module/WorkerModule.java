@@ -18,6 +18,7 @@ import com.example.arsalan.kavosh.wokrmanager.PhotoUploadWorker;
 import com.example.arsalan.kavosh.wokrmanager.SupervisorUploadWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurFoundDeleteWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurFoundUploadWorker;
+import com.example.arsalan.kavosh.wokrmanager.SurveyDeleteWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurveyProjectUploadWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurveyUploadWorker;
 
@@ -46,7 +47,8 @@ import dagger.multibindings.IntoMap;
         SurFoundDeleteWorkerModule.class,
         SurFoundUploadWorkerModule.class,
         SurveyProjectUploadWorkerModule.class,
-        SupervisorUploadWorkerModule.class
+        SupervisorUploadWorkerModule.class,
+        SurveyDeleteWorkerModule.class
 })
 public abstract class WorkerModule {
 
@@ -144,5 +146,11 @@ public abstract class WorkerModule {
     @IntoMap
     @WorkerKey(SupervisorUploadWorker.class)
     abstract AndroidInjector.Factory<? extends Worker> bindSupervisorUploadWorkerFactory(SupervisorUploadWorkerModule.Builder builder);
+
+
+    @Binds
+    @IntoMap
+    @WorkerKey(SurveyDeleteWorker.class)
+    abstract AndroidInjector.Factory<? extends Worker> bindSurveyDeleteWorkerFactory(SurveyDeleteWorkerModule.Builder builder);
 
 }

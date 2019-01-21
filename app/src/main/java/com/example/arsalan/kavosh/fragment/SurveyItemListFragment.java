@@ -1,14 +1,18 @@
 package com.example.arsalan.kavosh.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.activities.SurveyActivity;
@@ -25,6 +29,7 @@ import com.example.arsalan.kavosh.room.SurveyProjectDao;
 import com.example.arsalan.kavosh.viewModel.SurveyListViewModel;
 import com.example.arsalan.kavosh.viewModel.SurveyProjectViewModel;
 import com.example.arsalan.kavosh.viewModel.factory.MyViewModelFactory;
+import com.example.arsalan.kavosh.wokrmanager.SurveyDeleteWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +37,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -195,6 +206,20 @@ public class SurveyItemListFragment extends androidx.fragment.app.Fragment imple
         void onFragmentInteraction(Uri uri);
     }
 
+    private void removeSurvey(String surveyId) {
+        mSurveyDao.delete(surveyId);
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
+                .CONNECTED).build();
+        Data inputData = new Data.Builder()
+                .putString(MyConst.EXTRA_ID, surveyId).build();
+        OneTimeWorkRequest Work = new OneTimeWorkRequest.Builder(SurveyDeleteWorker.class)
+                .setConstraints(constraints).setInputData(inputData).build();
+        WorkManager.getInstance().enqueue(Work).getState().observe(SurveyItemListFragment.this, state -> {
+            Log.d(TAG, "removeSurvey: statis:" + state);
+        });
+
+    }
+
     private class SurveyRecyclerAdapter extends RecyclerView.Adapter<SurveyRecyclerAdapter.ViewHolder> implements SurveyItemListActivity.SurveyOnClickListener {
         List<Survey> surveyList;
 
@@ -213,6 +238,7 @@ public class SurveyItemListFragment extends androidx.fragment.app.Fragment imple
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.binding.setSurvey(surveyList.get(position));
             holder.binding.setOnSurveyClick(SurveyRecyclerAdapter.this);
+            holder.binding.setView(holder.binding.tvOptions);
         }
 
         @Override
@@ -221,12 +247,56 @@ public class SurveyItemListFragment extends androidx.fragment.app.Fragment imple
         }
 
         @Override
-        public void OnClickListener(String surveyId) {
+        public void onDetailClick(String surveyId) {
             Intent intent = new Intent();
             intent.putExtra(MyConst.EXTRA_ID, surveyId);
             intent.putExtra(MyConst.EXTRA_PROJECT_NAME, mSurveyProject.getName());
             intent.setClass(getActivity(), SurveyActivity.class);
             startActivity(intent);
+        }
+
+
+        @Override
+        public void onRemoveSurveyClick(String surveyId, View view) {
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(getContext(), view);
+            //inflating menu from xml resource
+
+            popup.inflate(R.menu.menu_delete);
+
+            //adding click listener
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_delete:
+                        TextView titleTV = new TextView(getContext());
+                        titleTV.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        titleTV.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        titleTV.setText("حذف");
+                        int dip = 8;
+                        int px = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip,
+                                getResources().getDisplayMetrics()
+                        );
+                        titleTV.setPadding(px, px, px, px);
+                        new AlertDialog.Builder(getContext())
+                                .setCustomTitle(titleTV)
+                                .setMessage("آیا مایلید این مورد حذف شود؟")
+                                .setPositiveButton("بلی", (dialogInterface, i) -> {
+                                    removeSurvey(surveyId);
+                                    dialogInterface.dismiss();
+                                })
+                                .setNegativeButton("خیر", (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create().show();
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            //displaying the popup
+            popup.show();
+
+
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

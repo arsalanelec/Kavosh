@@ -65,12 +65,13 @@ public interface ApiInterface {
     @GET("api/projects")
     Call<List<Project>> getProjectList(@Header("Authorization") String token);
 
+    /////SUPERVISORS
     @GET("api/projects/{projectId}/users")
     Call<List<Supervisor>> getProjectSupervisors(@Header("Authorization") String token, @Path("projectId") String parentId);
-
     @Multipart
-    @POST("api/projects/add_user")
-    Call<RetroResponse> addProjectSupervisor(@Header("Authorization") String token, @PartMap Map<String, RequestBody> params);
+    @POST("api/projects/supervisor_store")
+    Call<RetroResponse> storeProjectSupervisor(@Header("Authorization") String token, @PartMap Map<String, RequestBody> params);
+
 
 
     @Multipart
@@ -90,6 +91,10 @@ public interface ApiInterface {
 
     @GET("api/surveys/{surveyProject}/items")
     Call<List<Survey>> getSurveyProjectItems(@Header("Authorization") String token, @Path("surveyProject") String surveyId);
+
+    @DELETE("api/surveys/items/{survey}")
+    Call<RetroResponse> deleteSurveyItem(@Header("Authorization") String token, @Path("survey") String surveyId);
+
 
     //SurveyProject
     @GET("api/surveys/{surveyProject}")

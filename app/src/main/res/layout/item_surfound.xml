@@ -6,6 +6,10 @@
         <variable
             name="surFound"
             type="com.example.arsalan.kavosh.model.SurFound" />
+
+        <variable
+            name="listener"
+            type="com.example.arsalan.kavosh.fragment.SurfoundListFragment.OnSurFoundEventListener" />
     </data>
 
     <LinearLayout
@@ -14,13 +18,29 @@
         android:background="@android:color/white"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
+        android:layoutDirection="rtl"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:onClick="@{()->listener.onSurFoundDetailClicked(surFound)}"
             android:text="@{surFound.typeName}" />
+
+        <TextView
+            android:id="@+id/tvOptions"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:onClick="@{()->listener.onRemoveSourFoundClicked(surFound)}"
+            android:text="@string/dot_3"
+            android:textAppearance="?android:textAppearanceLarge" />
     </LinearLayout>
 
 </layout>

@@ -1,5 +1,6 @@
 package com.example.arsalan.kavosh.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,6 +21,7 @@ import com.example.arsalan.kavosh.room.SurFoundDao;
 import com.example.arsalan.kavosh.room.SurveyDao;
 import com.example.arsalan.kavosh.viewModel.SurveyViewModel;
 import com.example.arsalan.kavosh.viewModel.factory.MyViewModelFactory;
+import com.example.arsalan.kavosh.wokrmanager.SurFoundDeleteWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurFoundUploadWorker;
 import com.example.arsalan.kavosh.wokrmanager.SurveyUploadWorker;
 import com.google.gson.Gson;
@@ -156,9 +158,31 @@ public class SurveyActivity extends AppCompatActivity implements Injectable, Has
     }
 
     @Override
+    public void onRemoveSurFound(SurFound surFound) {
+        deleteSurvey(surFound.getId());
+    }
+
+    private void deleteSurvey(String id) {
+        mSurFoundDao.delete(id);
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
+                .CONNECTED).build();
+        Data inputData = new Data.Builder()
+                .putString(MyConst.EXTRA_ID, id).build();
+
+        OneTimeWorkRequest Work = new OneTimeWorkRequest.Builder(SurFoundDeleteWorker.class)
+                .setConstraints(constraints).setInputData(inputData).build();
+        WorkManager.getInstance().enqueue(Work);
+
+    }
+
+    @Override
     public void onAddSurFound(SurFound surFound) {
         surFound.setSurvey_id(mCurrentSurvey.getId());
         mSurFoundDao.save(surFound);
+        Intent intent = new Intent();
+        intent.setClass(SurveyActivity.this, SurFoundDetailActivity.class);
+        intent.putExtra(MyConst.EXTRA_ID, surFound.getId());
+        startActivity(intent);
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
                 .CONNECTED).build();
         Data inputData = new Data.Builder()

@@ -24,6 +24,7 @@ public interface SupervisorDao {
     @Insert(onConflict = REPLACE)
     long save(Supervisor supervisor);
 
+
     /* @Query("SELECT * FROM user INNER JOIN Supervisor " +
              "ON user.id=Supervisor.userId " +
              "WHERE Supervisor.projectId=:projectId")

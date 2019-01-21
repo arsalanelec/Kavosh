@@ -1,6 +1,7 @@
 package com.example.arsalan.kavosh.activities;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.ActivitySurveyItemListBinding;
@@ -49,7 +50,9 @@ public class SurveyItemListActivity extends AppCompatActivity implements Injecta
     }
 
     public interface SurveyOnClickListener {
-        void OnClickListener(String surveyId);
+        void onDetailClick(String surveyId);
+
+        void onRemoveSurveyClick(String surveyId, View view);
     }
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {

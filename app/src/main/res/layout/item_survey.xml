@@ -10,71 +10,95 @@
         <variable
             name="onSurveyClick"
             type="com.example.arsalan.kavosh.activities.SurveyItemListActivity.SurveyOnClickListener" />
+
+        <variable
+            name="view"
+            type="android.view.View" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:onClick='@{() -> onSurveyClick.OnClickListener(survey.id)}'
             android:orientation="horizontal">
 
-            <TextView
-                style="@style/text_item"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text='@{survey.surveyTypeString}' />
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick='@{() -> onSurveyClick.onDetailClick(survey.id)}'
+                android:orientation="horizontal">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/gray" />
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text='@{survey.surveyTypeString}' />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="2"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text='@{survey.name}' />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text='@{survey.registrationNum}' />
+            </LinearLayout>
 
             <TextView
-                style="@style/text_item"
-                android:layout_width="0dp"
+                android:id="@+id/tvOptions"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="2"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text='@{survey.name}' />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/gray" />
-
-            <TextView
-                style="@style/text_item"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text='@{survey.registrationNum}' />
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick='@{() -> onSurveyClick.onRemoveSurveyClick(survey.id,view)}'
+                android:text="@string/dot_3"
+                android:textAppearance="?android:textAppearanceLarge" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray" />
+
 
     </LinearLayout>
 

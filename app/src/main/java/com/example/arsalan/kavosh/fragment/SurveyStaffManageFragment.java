@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,6 +15,7 @@ import com.example.arsalan.kavosh.databinding.FragmentSurveyStaffManageBinding;
 import com.example.arsalan.kavosh.databinding.ItemSupervisorBinding;
 import com.example.arsalan.kavosh.di.Injectable;
 import com.example.arsalan.kavosh.dialog.AddSupervisorDialog;
+import com.example.arsalan.kavosh.dialog.ExitSupervisorDialog;
 import com.example.arsalan.kavosh.dialog.SupervisorDetailDialog;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.Supervisor;
@@ -26,14 +24,17 @@ import com.example.arsalan.kavosh.viewModel.SupervisorListViewModel;
 import com.example.arsalan.kavosh.viewModel.factory.MyViewModelFactory;
 import com.example.arsalan.kavosh.wokrmanager.SupervisorUploadWorker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -60,6 +61,7 @@ public class SurveyStaffManageFragment extends androidx.fragment.app.Fragment im
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int REQ_ADD_SUPERVISOR = 1;
+    private static final int REQ_EXIT_SUPERVISOR = 2;
 
     private static final String TAG = "SurveyStaffManageFragme";
     @Inject
@@ -153,24 +155,37 @@ public class SurveyStaffManageFragment extends androidx.fragment.app.Fragment im
         switch (requestCode) {
             case REQ_ADD_SUPERVISOR:
                 if (resultCode == RESULT_OK) {
+                    Log.d(TAG, "onActivityResult: project_id:" + mProjectId);
                     String supervisorId = data.getStringExtra(MyConst.EXTRA_ID);
                     Supervisor supervisor = new Supervisor(supervisorId, mProjectId);
                     supervisor.setName(data.getStringExtra(MyConst.EXTRA_NAME));
                     supervisor.setDateAdded(new Date(data.getLongExtra(MyConst.EXTRA_DATE, 0)));
                     supervisor.setStatus(1);
-                    addSupervisorForProject(supervisor);
+                    supervisorDao.save(supervisor);
+                    storeSupervisorForProject(supervisor);
+                }
+                break;
+            case REQ_EXIT_SUPERVISOR:
+                if (resultCode == RESULT_OK) {
+                    Supervisor supervisor = data.getParcelableExtra(MyConst.EXTRA_MODEL);
+                    supervisorDao.save(supervisor);
+                    storeSupervisorForProject(supervisor);
+
                 }
                 break;
         }
     }
 
-    private void addSupervisorForProject(Supervisor supervisor) {
-        supervisorDao.save(supervisor);
+    private void storeSupervisorForProject(Supervisor supervisor) {
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
                 .CONNECTED).build();
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", new Locale("en", "gb"));
+
         Data inputData = new Data.Builder()
                 .putString("user_id", supervisor.getUserId())
                 .putString("project_id", supervisor.getProjectId())
+                .putString("date_added", fmt.format(supervisor.getDateAdded()))
+                .putString("date_removed", fmt.format(supervisor.getDateRemoved()))
                 .putString("status", String.valueOf(supervisor.getStatus()))
                 .build();
 
@@ -178,47 +193,14 @@ public class SurveyStaffManageFragment extends androidx.fragment.app.Fragment im
                 .setConstraints(constraints)
                 .setInputData(inputData).build();
         WorkManager.getInstance().enqueue(uploadWorker).getState().observe(SurveyStaffManageFragment.this, status -> {
-            Log.d("SupervisorUploadWorker", "addSupervisorForProject: status" + status);
+            Log.d("SupervisorUploadWorker", "storeSupervisorForProject: status:" + status);
         });
 
     }
 
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        // mCurrentPosition = (int) v.getTag();
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.menu_delete_edit, menu);
-        Log.d(TAG, "onCreateContextMenu:");
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_edit:
-                
-                //    Toast.makeText(getContext(), "Editing!:" + mCurrentPosition, Toast.LENGTH_SHORT).show();
-/*                AddHillSideDialog dialog = AddHillSideDialog.newInstance(mCurrentPosition, mHillsideList.get(mCurrentPosition));
-                dialog.setTargetFragment(SurveyStaffManageFragment.this, REQ_EDIT_HILL_SIDE);
-                dialog.show(getFragmentManager(), "");*/
-
-                return true;
-            case R.id.menu_delete:
-                // Trigger the deletion here
-               /* mHillsideList.remove(mCurrentPosition);
-                mAdapterHillSide.notifyDataSetChanged();
-                Gson gson = new Gson();
-                mDetail.setHillsideList(mHillsideList);
-                mListener.onSurveyExtraDetail(gson.toJson(mDetail));*/
-
-                return true;
-            default:
-                return false;
-        }
-    }
 
     public interface OnSupervisorClickListener {
-        void onClick(Supervisor supervisor);
+        void onClick(Supervisor supervisor, View view);
     }
 
     /**
@@ -254,6 +236,7 @@ public class SurveyStaffManageFragment extends androidx.fragment.app.Fragment im
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.binding.setSupervisor(userList.get(position));
+            holder.binding.setThisView(holder.binding.textViewOptions);
             holder.binding.setSupervisorClickListener(SupervisorRecyclerAdapter.this);
 
         }
@@ -264,9 +247,35 @@ public class SurveyStaffManageFragment extends androidx.fragment.app.Fragment im
         }
 
         @Override
-        public void onClick(Supervisor supervisor) {
-            SupervisorDetailDialog detailDialog = SupervisorDetailDialog.newInstance(supervisor);
-            detailDialog.show(getFragmentManager(), "");
+        public void onClick(Supervisor supervisor, View view) {
+            //  SupervisorDetailDialog detailDialog = SupervisorDetailDialog.newInstance(supervisor);
+            //  detailDialog.show(getFragmentManager(), "");
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(getContext(), view);
+            //inflating menu from xml resource
+            if (supervisor.getStatus() == 1) {
+                popup.inflate(R.menu.menu_view_edit);
+            } else {
+                popup.inflate(R.menu.menu_view);
+            }
+            //adding click listener
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_view:
+                        SupervisorDetailDialog detailDialog = SupervisorDetailDialog.newInstance(supervisor);
+                        detailDialog.show(getFragmentManager(), "");
+                        return true;
+                    case R.id.menu_remove:
+                        ExitSupervisorDialog dialog = ExitSupervisorDialog.newInstance(supervisor);
+                        dialog.setTargetFragment(SurveyStaffManageFragment.this, REQ_EXIT_SUPERVISOR);
+                        dialog.show(getFragmentManager(), "");
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            //displaying the popup
+            popup.show();
         }
 
 

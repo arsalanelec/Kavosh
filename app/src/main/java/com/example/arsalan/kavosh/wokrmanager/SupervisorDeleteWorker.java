@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SupervisorUploadWorker extends Worker implements Injectable {
+public class SupervisorDeleteWorker extends Worker implements Injectable {
 
     private static final String TAG = "SupervisorUploadWorker";
     @Inject
@@ -31,7 +31,7 @@ public class SupervisorUploadWorker extends Worker implements Injectable {
     @Inject
     Token mToken;
 
-    public SupervisorUploadWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public SupervisorDeleteWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 

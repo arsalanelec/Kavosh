@@ -8,6 +8,9 @@
             type="com.example.arsalan.kavosh.model.Supervisor" />
 
         <variable
+            name="thisView"
+            type="android.view.View" />
+        <variable
             name="supervisorClickListener"
             type="com.example.arsalan.kavosh.fragment.SurveyStaffManageFragment.OnSupervisorClickListener" />
     </data>
@@ -21,12 +24,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:onClick="@{()->supervisorClickListener.onClick(supervisor)}"
             android:orientation="horizontal"
             android:padding="8dp">
 
+            <TextView
+                android:id="@+id/textViewOptions"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:onClick="@{()->supervisorClickListener.onClick(supervisor,thisView)}"
+                android:text="@string/dot_3"
+                android:textAppearance="?android:textAppearanceLarge" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

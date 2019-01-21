@@ -3,9 +3,12 @@ package com.example.arsalan.kavosh.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.activities.SurFoundDetailActivity;
@@ -25,6 +28,7 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -129,9 +133,17 @@ public class SurfoundListFragment extends Fragment implements Injectable {
      */
     public interface OnFragmentInteractionListener {
         void onSaveSurFound(SurFound surFound);
+
+        void onRemoveSurFound(SurFound surFound);
     }
 
-    private class FoundRecyclerAdapter extends RecyclerView.Adapter<FoundRecyclerAdapter.ViewHolder> {
+    public interface OnSurFoundEventListener {
+        void onSurFoundDetailClicked(SurFound surFound);
+
+        void onRemoveSourFoundClicked(SurFound surFound);
+    }
+
+    private class FoundRecyclerAdapter extends RecyclerView.Adapter<FoundRecyclerAdapter.ViewHolder> implements OnSurFoundEventListener {
         List<SurFound> foundList;
 
         public FoundRecyclerAdapter(List<SurFound> foundList) {
@@ -152,17 +164,44 @@ public class SurfoundListFragment extends Fragment implements Injectable {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
             viewHolder.binding.setSurFound(foundList.get(i));
-            viewHolder.binding.getRoot().setOnClickListener(view -> {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), SurFoundDetailActivity.class);
-                intent.putExtra(MyConst.EXTRA_ID, foundList.get(i).getId());
-                startActivity(intent);
-            });
+            viewHolder.binding.setListener(FoundRecyclerAdapter.this);
         }
 
         @Override
         public int getItemCount() {
             return foundList.size();
+        }
+
+        @Override
+        public void onSurFoundDetailClicked(SurFound surFound) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), SurFoundDetailActivity.class);
+            intent.putExtra(MyConst.EXTRA_ID, surFound.getId());
+            startActivity(intent);
+        }
+
+        @Override
+        public void onRemoveSourFoundClicked(SurFound surFound) {
+            TextView titleTV = new TextView(getContext());
+            titleTV.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            titleTV.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            titleTV.setText("حذف");
+            int dip = 8;
+            int px = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dip,
+                    getResources().getDisplayMetrics()
+            );
+            titleTV.setPadding(px, px, px, px);
+            new AlertDialog.Builder(getContext())
+                    .setCustomTitle(titleTV)
+                    .setMessage("آیا مایلید این مورد حذف شود؟")
+                    .setPositiveButton("بلی", (dialogInterface, i) -> {
+                        mListener.onRemoveSurFound(surFound);
+                        dialogInterface.dismiss();
+                    })
+                    .setNegativeButton("خیر", (dialogInterface, i) -> dialogInterface.dismiss())
+                    .create().show();
         }
 
 
