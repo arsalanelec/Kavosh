@@ -1,7 +1,7 @@
 package com.example.arsalan.kavosh.model;
 
 public class MyConst {
-    public static final String BASE_URL = "http://10.0.2.2/Bastan1/public/"; //"http://b0de60af.ap.ngrok.io/";
+    public static final String BASE_URL = "http://81fe2066.ap.ngrok.io/";//"http://10.0.2.2/Bastan1/public/"; //"http://b0de60af.ap.ngrok.io/";
 
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";

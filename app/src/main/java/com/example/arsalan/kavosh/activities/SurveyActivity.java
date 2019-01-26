@@ -12,6 +12,7 @@ import com.example.arsalan.kavosh.fragment.BlankFragment;
 import com.example.arsalan.kavosh.fragment.SurfoundListFragment;
 import com.example.arsalan.kavosh.fragment.SurveyHillDestructionDetailFragment;
 import com.example.arsalan.kavosh.fragment.SurveyHillExtraDetailFragment;
+import com.example.arsalan.kavosh.fragment.SurveyOssuaryExtraDetailFragment;
 import com.example.arsalan.kavosh.fragment.SurveyPropertiesFragment;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.SurFound;
@@ -50,7 +51,8 @@ public class SurveyActivity extends AppCompatActivity implements Injectable, Has
         SurfoundListFragment.OnFragmentInteractionListener
         , AddSurFoundDialog.OnFragmentInteractionListener
         , SurveyHillExtraDetailFragment.OnFragmentInteractionListener
-        , SurveyHillDestructionDetailFragment.OnFragmentInteractionListener {
+        , SurveyHillDestructionDetailFragment.OnFragmentInteractionListener
+        , SurveyOssuaryExtraDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "SurveyActivity";
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
@@ -239,8 +241,14 @@ public class SurveyActivity extends AppCompatActivity implements Injectable, Has
             if (i == 0) {
                 return SurveyPropertiesFragment.newInstance(survey.getContentJson(), survey.getId());
             } else if (i == 1) {
-                Log.d(TAG, "extraDetail json: " + mSurveyExtraDetailJson);
-                return SurveyHillExtraDetailFragment.newInstance(mSurveyExtraDetailJson);
+                switch (survey.getType()) {
+                    case 12:
+                        return SurveyOssuaryExtraDetailFragment.newInstance(mSurveyExtraDetailJson);
+                    default:
+                        return SurveyHillExtraDetailFragment.newInstance(mSurveyExtraDetailJson);
+
+                }
+
 
             } else if (i == 2) {
                 Log.d(TAG, "extraDetail json: " + mSurveyDestructionDetailJson);

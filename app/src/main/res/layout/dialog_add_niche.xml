@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".dialog.AddHillSideDialog">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/dialog_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="طاقچه" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="جهت:" />
+
+                <Spinner
+                    android:id="@+id/spnCoordination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_coordination" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ارتفاع (سانتیمتر):" />
+
+                <EditText
+                    android:id="@+id/etHeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ارتفاع..."
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="عرض (سانتیمتر):" />
+
+                <EditText
+                    android:id="@+id/etWidth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="عرض..."
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="عمق (سانتیمتر):" />
+
+                <EditText
+                    android:id="@+id/etDept"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="عمق..."
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="انصراف" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="تایید" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

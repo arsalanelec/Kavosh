@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.ActivityExcavationItemBinding;
 import com.example.arsalan.kavosh.di.Injectable;
-import com.example.arsalan.kavosh.fragment.FeatureLayerListFragment;
+import com.example.arsalan.kavosh.fragment.LayerFeatureListFragment;
 import com.example.arsalan.kavosh.fragment.SupervisorListFragment;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.Token;
@@ -175,7 +175,7 @@ public class ExcavationItemActivity extends AppCompatActivity implements Injecta
             if (i == 1) {
                 return SupervisorListFragment.newInstance(mExcavationItemId);
             } else if (i == 0) {
-                return FeatureLayerListFragment.newInstance(mExcavationItemId, getmExcavationItemLayerCoding, mRegistrationCoding);
+                return LayerFeatureListFragment.newInstance(mExcavationItemId, getmExcavationItemLayerCoding, mRegistrationCoding);
             }
             return null;
         }

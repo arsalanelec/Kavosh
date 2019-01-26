@@ -22,17 +22,23 @@ import com.example.arsalan.kavosh.dialog.NewExcavationItem1Dialog;
 import com.example.arsalan.kavosh.dialog.NewSurveyDialog;
 import com.example.arsalan.kavosh.dialog.NewSurveyProjectDialog;
 import com.example.arsalan.kavosh.fragment.ContextureFragment;
-import com.example.arsalan.kavosh.fragment.FeatureLayerListFragment;
-import com.example.arsalan.kavosh.fragment.FloorFragment;
 import com.example.arsalan.kavosh.fragment.FoundListFragment;
+import com.example.arsalan.kavosh.fragment.FtrDebrisFragment;
+import com.example.arsalan.kavosh.fragment.FtrDitchFragment;
+import com.example.arsalan.kavosh.fragment.FtrFireplaceFragment;
+import com.example.arsalan.kavosh.fragment.FtrFloorFragment;
+import com.example.arsalan.kavosh.fragment.FtrPitFragment;
+import com.example.arsalan.kavosh.fragment.FtrStoveFragment;
+import com.example.arsalan.kavosh.fragment.FtrWallFragment;
+import com.example.arsalan.kavosh.fragment.LayerFeatureListFragment;
 import com.example.arsalan.kavosh.fragment.LayerPositionFragment;
 import com.example.arsalan.kavosh.fragment.ProjectListFragment;
 import com.example.arsalan.kavosh.fragment.SupervisorListFragment;
 import com.example.arsalan.kavosh.fragment.SurfoundListFragment;
 import com.example.arsalan.kavosh.fragment.SurveyItemListFragment;
+import com.example.arsalan.kavosh.fragment.SurveyOssuaryExtraDetailFragment;
 import com.example.arsalan.kavosh.fragment.SurveyPropertiesFragment;
 import com.example.arsalan.kavosh.fragment.SurveyStaffManageFragment;
-import com.example.arsalan.kavosh.fragment.WallFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -50,7 +56,7 @@ public abstract class FragmentBuildersModule {
     abstract NewExcavationItem1Dialog contributeNewExcavationItem1Dialog();
 
     @ContributesAndroidInjector
-    abstract FeatureLayerListFragment contributeFeatureLayerListFragment();
+    abstract LayerFeatureListFragment contributeFeatureLayerListFragment();
 
     @ContributesAndroidInjector
     abstract SupervisorListFragment contributeSupervisorListFragment();
@@ -66,10 +72,10 @@ public abstract class FragmentBuildersModule {
 
 
     @ContributesAndroidInjector
-    abstract WallFragment contributeWallFragment();
+    abstract FtrWallFragment contributeWallFragment();
 
     @ContributesAndroidInjector
-    abstract FloorFragment contributeFloorFragment();
+    abstract FtrFloorFragment contributeFloorFragment();
 
     @ContributesAndroidInjector
     abstract NewSurveyDialog NewSurveyDialog();
@@ -92,5 +98,23 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract AddSupervisorDialog addSupervisorDialog();
+
+    @ContributesAndroidInjector
+    abstract SurveyOssuaryExtraDetailFragment addSurveyOssuaryExtraDetailFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrDebrisFragment addFtrDebrisFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrFireplaceFragment addFtrFireplaceFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrStoveFragment addFtrStoveFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrPitFragment addFtrPitFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrDitchFragment addFtrDitchFragment();
 
 }

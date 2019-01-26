@@ -61,7 +61,7 @@ public class SupervisorListFragment extends androidx.fragment.app.Fragment imple
      * this fragment using the provided parameters.
      *
      * @param itemId Parameter 1.
-     * @return A new instance of fragment FeatureLayerListFragment.
+     * @return A new instance of fragment LayerFeatureListFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static SupervisorListFragment newInstance(String itemId) {

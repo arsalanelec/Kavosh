@@ -3,9 +3,12 @@ package com.example.arsalan.kavosh.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 public class Composition implements Parcelable {
+    private String type;
+    private String percent;
+    private String dimension;
+    private int meter_mili;
+
     public static final Creator<Composition> CREATOR = new Creator<Composition>() {
         @Override
         public Composition createFromParcel(Parcel in) {
@@ -17,22 +20,33 @@ public class Composition implements Parcelable {
             return new Composition[size];
         }
     };
-    private String type;
-    private String percent;
-    private String dimension;
-    private int meter_mili;
-    private List<String> shapes;
-    private transient String shapesSt;
-
-    public Composition() {
-    }
-
+    private String[] shapeArray = {"نا منظم", "گرد", "چند وجهی", "استوانه ای"};
+    private boolean[] shapes = new boolean[4];
     protected Composition(Parcel in) {
         type = in.readString();
         percent = in.readString();
         dimension = in.readString();
         meter_mili = in.readInt();
-        shapes = in.createStringArrayList();
+        shapeArray = in.createStringArray();
+        shapes = in.createBooleanArray();
+    }
+
+    private transient String shapesSt;
+
+    public Composition() {
+    }
+
+    public boolean[] getShapes() {
+        return shapes;
+    }
+
+    public void setShapes(boolean[] shapes) {
+        this.shapes = shapes;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -41,12 +55,8 @@ public class Composition implements Parcelable {
         dest.writeString(percent);
         dest.writeString(dimension);
         dest.writeInt(meter_mili);
-        dest.writeStringList(shapes);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        dest.writeStringArray(shapeArray);
+        dest.writeBooleanArray(shapes);
     }
 
     public String getType() {
@@ -73,19 +83,15 @@ public class Composition implements Parcelable {
         this.dimension = dimension;
     }
 
-    public List<String> getShapes() {
-        return shapes;
-    }
-
-    public void setShapes(List<String> shapes) {
-        this.shapes = shapes;
-    }
-
     public String getShapesSt() {
         String result = "";
-        for (int i = 0; i < shapes.size(); i++) {
-            result += shapes.get(i) + " ";
+
+        for (int i = 0; i < shapes.length; i++) {
+            if (shapes[0])
+                result += shapeArray[i];
+            if ((i + 1) < shapes.length) result += ",";
         }
+
         return result;
     }
 

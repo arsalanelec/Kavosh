@@ -14,9 +14,6 @@ import com.example.arsalan.kavosh.databinding.DialogAddCompositionBinding;
 import com.example.arsalan.kavosh.model.Composition;
 import com.example.arsalan.kavosh.model.MyConst;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -30,8 +27,8 @@ public class AddCompositionDialog extends DialogFragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Composition mComposition;
+    private int mIndex;
 
     private OnFragmentInteractionListener mListener;
 
@@ -43,16 +40,14 @@ public class AddCompositionDialog extends DialogFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment AddCompositionDialog.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddCompositionDialog newInstance(String param1, String param2) {
+    public static AddCompositionDialog newInstance(Composition composition, int index) {
         AddCompositionDialog fragment = new AddCompositionDialog();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, composition);
+        args.putInt(ARG_PARAM2, index);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,9 +56,10 @@ public class AddCompositionDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mComposition = getArguments().getParcelable(ARG_PARAM1);
+            mIndex = getArguments().getInt(ARG_PARAM2, 0);
         }
+        if (mComposition == null) mComposition = new Composition();
     }
 
     @Override
@@ -74,6 +70,15 @@ public class AddCompositionDialog extends DialogFragment {
         View view = binding.getRoot();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+        binding.etDimension.setText(mComposition.getDimension());
+        binding.etPercent.setText(mComposition.getPercent());
+        binding.etType.setText(mComposition.getType());
+        binding.spnMeter.setSelection(mComposition.getMeter_mili());
+        if (mComposition.getShapes()[0]) binding.rbIrregular.setChecked(true);
+        if (mComposition.getShapes()[1]) binding.rbSphere.setChecked(true);
+        if (mComposition.getShapes()[2]) binding.rbPolygon.setChecked(true);
+        if (mComposition.getShapes()[3]) binding.rbCylindrical.setChecked(true);
+        
         binding.btnSubmit.setOnClickListener(view1 -> {
             boolean error = false;
             if (binding.etType.getText().toString().isEmpty()) {
@@ -82,19 +87,18 @@ public class AddCompositionDialog extends DialogFragment {
                 error = true;
             }
             if (error) return;
-            Composition shape = new Composition();
-            shape.setDimension(binding.etDimension.getText().toString());
-            shape.setPercent(binding.etPercent.getText().toString());
-            shape.setType(binding.etType.getText().toString());
-            List<String> shapeList = new ArrayList<>();
-            if (binding.rbCylindrical.isChecked()) shapeList.add("استوانه ای");
-            if (binding.rbIrregular.isChecked()) shapeList.add("نامنظم");
-            if (binding.rbPolygon.isChecked()) shapeList.add("چند وجهی");
-            if (binding.rbSphere.isChecked()) shapeList.add("گرد");
-            shape.setShapes(shapeList);
-            shape.setMeter_mili(binding.spnMeter.getSelectedItemPosition());
+            mComposition.setDimension(binding.etDimension.getText().toString());
+            mComposition.setPercent(binding.etPercent.getText().toString());
+            mComposition.setType(binding.etType.getText().toString());
+            if (binding.rbCylindrical.isChecked()) mComposition.getShapes()[3] = true;
+            if (binding.rbIrregular.isChecked()) mComposition.getShapes()[0] = true;
+            if (binding.rbPolygon.isChecked()) mComposition.getShapes()[2] = true;
+            if (binding.rbSphere.isChecked()) mComposition.getShapes()[1] = true;
+
+            mComposition.setMeter_mili(binding.spnMeter.getSelectedItemPosition());
             Intent intent = new Intent();
-            intent.putExtra(MyConst.EXTRA_MODEL, shape);
+            intent.putExtra(MyConst.EXTRA_INDEX, mIndex);
+            intent.putExtra(MyConst.EXTRA_MODEL, mComposition);
             getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
             dismiss();
         });
@@ -105,12 +109,6 @@ public class AddCompositionDialog extends DialogFragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

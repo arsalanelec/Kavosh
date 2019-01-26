@@ -133,7 +133,7 @@ public class SurveyItemListFragment extends androidx.fragment.app.Fragment imple
             }
         });
         b.btnAdd.setOnClickListener(btn -> {
-            NewSurveyDialog dialog = NewSurveyDialog.newInstance(mSurveyProjectId, getNewRegistrationCode(), mSurveyProject.getCodeName());
+            NewSurveyDialog dialog = NewSurveyDialog.newInstance(mSurveyProjectId, getNewRegistrationCode(), mSurveyProject.getCodeName(), mSurveyProject.getName());
             dialog.show(getFragmentManager(), "");
         });
         return b.getRoot();

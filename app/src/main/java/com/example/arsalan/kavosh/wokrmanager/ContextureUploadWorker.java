@@ -9,8 +9,6 @@ import com.example.arsalan.kavosh.model.RetroResponse;
 import com.example.arsalan.kavosh.model.Token;
 import com.example.arsalan.kavosh.retrofit.ApiInterface;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,17 +62,9 @@ public class ContextureUploadWorker extends Worker implements Injectable {
                 Log.d(TAG, "run: response.error:" + response.errorBody().string());
                 return Result.failure();
             }
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-            return Result.retry();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Result.failure();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            return Result.failure();
+        } catch (Throwable t) {
+            Log.d(TAG, "doWork: throws:" + t.getLocalizedMessage());
         }
-
+        return Result.failure();
     }
-
 }

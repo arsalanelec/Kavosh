@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.SurveyOssuaryExtraDetailFragment">
+
+    <data>
+
+        <variable
+            name="ossuaryDetail"
+            type="com.example.arsalan.kavosh.model.SurOssuaryExtraDetail" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layoutDirection="rtl"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="جهت ورودی استودان:" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_coordination"
+                    android:selectedItemPosition="@={ossuaryDetail.entryCoordination}" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/txtEntryProperties"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="مشخصات محل ورودی..."
+                    android:inputType="text"
+                    android:lines="1"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.entryProperties}" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ابعاد ورودی(ارتفاع،عرض،ضخامت):" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="ارتفاع"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.entryHeight}" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="عرض"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.entryWidth}" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="ضخامت"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.entryThickness}" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="cm " />
+            </LinearLayout>
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ابعاد اتاقک(طول،عرض،ارتفاع):" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="طول"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.roomLength}" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="عرض"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.roomWidth}" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray" />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="ارتفاع"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={ossuaryDetail.roomHeight}" />
+
+                <TextView
+                    style="@style/text_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="cm " />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="طاقچه: " />
+
+
+            <LinearLayout
+                android:id="@+id/llNiche"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnAddNiche"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="@color/action"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/text_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="حوضچه وسط:" />
+
+
+            <LinearLayout
+                android:id="@+id/llLaver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnAddLaver"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="@color/action"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

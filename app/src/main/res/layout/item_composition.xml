@@ -4,8 +4,19 @@
     <data>
 
         <variable
+            name="index"
+            type="Integer" />
+        <variable
             name="composition"
             type="com.example.arsalan.kavosh.model.Composition" />
+
+        <variable
+            name="eventListener"
+            type="com.example.arsalan.kavosh.fragment.FtrWallFragment.CompositionEventListener" />
+
+        <variable
+            name="thisView"
+            type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -21,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:text="@{composition.type}" />
 
@@ -63,7 +75,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingStart="8dp"
+            android:gravity="center_vertical"
             android:text="@{composition.shapesSt}" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:onClick="@{()->eventListener.onCompositionClicked(composition,thisView,index)}"
+            android:text="@string/dot_3"
+            android:textAppearance="?android:textAppearanceLarge" />
 
     </LinearLayout>
 </layout>

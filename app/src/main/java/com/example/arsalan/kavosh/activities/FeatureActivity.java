@@ -14,8 +14,14 @@ import android.widget.TextView;
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.ActivityFeatureBinding;
 import com.example.arsalan.kavosh.di.Injectable;
-import com.example.arsalan.kavosh.fragment.FloorFragment;
-import com.example.arsalan.kavosh.fragment.WallFragment;
+import com.example.arsalan.kavosh.fragment.BlankFragment;
+import com.example.arsalan.kavosh.fragment.FtrDebrisFragment;
+import com.example.arsalan.kavosh.fragment.FtrDitchFragment;
+import com.example.arsalan.kavosh.fragment.FtrFireplaceFragment;
+import com.example.arsalan.kavosh.fragment.FtrFloorFragment;
+import com.example.arsalan.kavosh.fragment.FtrPitFragment;
+import com.example.arsalan.kavosh.fragment.FtrStoveFragment;
+import com.example.arsalan.kavosh.fragment.FtrWallFragment;
 import com.example.arsalan.kavosh.model.AudioMemo;
 import com.example.arsalan.kavosh.model.Feature;
 import com.example.arsalan.kavosh.model.MyConst;
@@ -27,6 +33,7 @@ import com.example.arsalan.kavosh.room.LayerFeatureDao;
 import com.example.arsalan.kavosh.room.PhotoDao;
 import com.example.arsalan.kavosh.viewModel.FeatureViewModel;
 import com.example.arsalan.kavosh.viewModel.factory.MyViewModelFactory;
+import com.example.arsalan.kavosh.wokrmanager.FeatureCreateUpdateWorker;
 import com.example.arsalan.kavosh.wokrmanager.FeatureDeleteWorker;
 
 import javax.inject.Inject;
@@ -46,12 +53,25 @@ import androidx.work.WorkManager;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE1;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE13;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE17;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE18;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE2;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE3;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE5;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE6;
 import static com.example.arsalan.kavosh.utils.AudioUpload.uploadAudio;
 import static com.example.arsalan.kavosh.utils.PhotoUpload.uploadPhoto;
 
 public class FeatureActivity extends AppCompatActivity implements Injectable, HasSupportFragmentInjector
-        , WallFragment.OnFragmentInteractionListener
-        , FloorFragment.OnFragmentInteractionListener {
+        , FtrWallFragment.OnFragmentInteractionListener
+        , FtrFloorFragment.OnFragmentInteractionListener
+        , FtrDebrisFragment.OnFragmentInteractionListener
+        , FtrFireplaceFragment.OnFragmentInteractionListener
+        , FtrStoveFragment.OnFragmentInteractionListener
+        , FtrPitFragment.OnFragmentInteractionListener
+        , FtrDitchFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "FeatureActivity";
 
@@ -107,24 +127,37 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
             public void onChanged(@Nullable Feature feature) {
                 if (feature != null) {
                     mFeature = feature;
-                    /*   if (mFeature.getStructure_index() == 1) {
-                    WallFragment wallFragment = WallFragment.newInstance(mFeature);
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.content, wallFragment)
-                            .commit();
-                      }*/
-                    FloorFragment fragment = FloorFragment.newInstance(mFeature);
+                    Fragment fragment = new BlankFragment();
+                    if (mFeature.getStructureIndex() == FEATURE1.ordinal() || mFeature.getStructureIndex() == FEATURE2.ordinal()) {
+                        fragment = FtrWallFragment.newInstance(mFeature);
+
+                    } else if (mFeature.getStructureIndex() == FEATURE3.ordinal()) {
+                        fragment = FtrFloorFragment.newInstance(mFeature);
+
+
+                    } else if (mFeature.getStructureIndex() == FEATURE6.ordinal()) {//آتشدان
+                        fragment = FtrFireplaceFragment.newInstance(mFeature);
+
+                    } else if (mFeature.getStructureIndex() == FEATURE13.ordinal()) {//آوار
+                        fragment = FtrDebrisFragment.newInstance(mFeature);
+
+                    } else if (mFeature.getStructureIndex() == FEATURE5.ordinal()) {// اجاق
+                        fragment = FtrStoveFragment.newInstance(mFeature);
+                    } else if (mFeature.getStructureIndex() == FEATURE17.ordinal()) {// چاله
+                        fragment = FtrPitFragment.newInstance(mFeature);
+                    } else if (mFeature.getStructureIndex() == FEATURE18.ordinal()) { //راه آب
+                        fragment = FtrDitchFragment.newInstance(mFeature);
+                    }
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.content, fragment)
                             .commit();
-                    viewModel.getFeature().removeObserver(this);
                 }
+                viewModel.getFeature().
+
+                        removeObserver(this);
             }
         });
-
-
     }
 
 
@@ -133,7 +166,6 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
     }
 
 /*
-
     private void updateFeature(Feature feature) {
         mFeatureDao.save(feature);
         Data inputDataFeature = new Data.Builder()
@@ -241,7 +273,7 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
 
     @Override
     public void onUpdateFeature(Feature feature) {
-        mFeatureDao.save(feature);
+        StoreFeature(feature);
         Log.d(TAG, "onUpdateFeature: ");
     }
 
@@ -258,4 +290,30 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
         uploadPhoto(photo, FeatureActivity.this);
 
     }
+
+    private void StoreFeature(Feature feature) {
+
+        mFeatureDao.save(feature);
+
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
+                .CONNECTED).build();
+
+        Data inputDataLayer = new Data.Builder()
+                /*'id','name','structure','content_json','structure_index'*/
+
+                .putString("id", feature.getId())
+                .putString("name", feature.getName())
+                .putString("structure", feature.getStructureName())
+                .putString("structure_index", String.valueOf(feature.getStructureIndex()))
+                .putString("content_json", feature.getContentJson())
+                .build();
+
+        OneTimeWorkRequest featureUploadWork = new OneTimeWorkRequest.Builder(FeatureCreateUpdateWorker.class)
+                .setConstraints(constraints).setInputData(inputDataLayer).build();
+
+        WorkManager.getInstance().enqueue(featureUploadWork);
+
+
+    }
+
 }

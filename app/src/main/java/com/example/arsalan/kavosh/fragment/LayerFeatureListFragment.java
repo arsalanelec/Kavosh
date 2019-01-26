@@ -16,6 +16,7 @@ import com.example.arsalan.kavosh.activities.LayerActivity;
 import com.example.arsalan.kavosh.databinding.FragmentFeatureLayerListBinding;
 import com.example.arsalan.kavosh.databinding.ItemLayerFeatureRecyclerBinding;
 import com.example.arsalan.kavosh.di.Injectable;
+import com.example.arsalan.kavosh.dialog.AddFeatureDialog;
 import com.example.arsalan.kavosh.model.Contexture;
 import com.example.arsalan.kavosh.model.Feature;
 import com.example.arsalan.kavosh.model.Layer;
@@ -52,16 +53,18 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkManager;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FeatureLayerListFragment.OnFragmentInteractionListener} interface
+ * {@link LayerFeatureListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FeatureLayerListFragment#newInstance} factory method to
+ * Use the {@link LayerFeatureListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FeatureLayerListFragment extends androidx.fragment.app.Fragment implements Injectable {
+public class LayerFeatureListFragment extends androidx.fragment.app.Fragment implements Injectable {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "FeatureLayerListFragmen";
@@ -69,6 +72,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
     private static final String ARG_PARAM2 = "param2";
 
     private static final String ARG_PARAM3 = "param3";
+    private static final int REQ_ADD_FEATURE = 1;
     @Inject
     MyViewModelFactory factory;
     @Inject
@@ -91,7 +95,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
     private FragmentFeatureLayerListBinding mBinding;
     private String mLastLayerFeature;
 
-    public FeatureLayerListFragment() {
+    public LayerFeatureListFragment() {
         // Required empty public constructor
     }
 
@@ -99,11 +103,11 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment FeatureLayerListFragment.
+     * @return A new instance of fragment LayerFeatureListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FeatureLayerListFragment newInstance(String itemId, String itemLayerCoding, String registrationCoding) {
-        FeatureLayerListFragment fragment = new FeatureLayerListFragment();
+    public static LayerFeatureListFragment newInstance(String itemId, String itemLayerCoding, String registrationCoding) {
+        LayerFeatureListFragment fragment = new LayerFeatureListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, itemId);
         args.putString(ARG_PARAM2, itemLayerCoding);
@@ -127,6 +131,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_feature_layer_list, container, false);
         mAdapter = new LayerFeatureAdapter(mLayerFeatureList);
         mBinding.rvLayerFeature.setAdapter(mAdapter);
@@ -140,9 +145,11 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
         });
 
         mBinding.btnAddFeature.setOnClickListener(view -> {
-            mBinding.btnAddLayer.setEnabled(false);
-            mBinding.btnAddFeature.setEnabled(false);
-            CreateNewFeature(increaseCode(mItemCoding, mLayerFeatureList.size()), mItemId);
+            // mBinding.btnAddLayer.setEnabled(false);
+            // mBinding.btnAddFeature.setEnabled(false);
+            AddFeatureDialog dialog = new AddFeatureDialog();
+            dialog.setTargetFragment(LayerFeatureListFragment.this, REQ_ADD_FEATURE);
+            dialog.show(getFragmentManager(), "");
 
         });
         View view = mBinding.getRoot();
@@ -151,6 +158,18 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_ADD_FEATURE:
+                if (resultCode == RESULT_OK) {
+                    int structureIndex = data.getIntExtra(MyConst.EXTRA_INDEX, 0);
+                    CreateNewFeature(increaseCode(mItemCoding, mLayerFeatureList.size()), mItemId, structureIndex);
+                }
+                break;
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -172,9 +191,9 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LayerFeatureViewModel viewModel = ViewModelProviders.of(FeatureLayerListFragment.this, factory).get(LayerFeatureViewModel.class);
+        LayerFeatureViewModel viewModel = ViewModelProviders.of(LayerFeatureListFragment.this, factory).get(LayerFeatureViewModel.class);
         viewModel.initial(mItemId);
-        viewModel.getLayerFeatureList().observe(FeatureLayerListFragment.this, layerFeatures -> {
+        viewModel.getLayerFeatureList().observe(LayerFeatureListFragment.this, layerFeatures -> {
             Log.d("onActivityCreated", "observe: photoList:" + layerFeatures);
             mLayerFeatureList.removeAll(mLayerFeatureList);
             mLayerFeatureList.addAll(layerFeatures);
@@ -231,7 +250,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
 
         mLayerFeatureDao.save(layerFeature);
         mLayerDao.save(layer);
-
+        mAdapter.onLayerFeatureClick(layerFeature);
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
                 .CONNECTED).build();
         Data inputData = new Data.Builder()
@@ -274,7 +293,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
         continuation.enqueue();
 
         WorkManager.getInstance().getWorkInfoByIdLiveData(LayerFeatureUploadWork.getId())
-                .observe(FeatureLayerListFragment.this, workStatus -> {
+                .observe(LayerFeatureListFragment.this, workStatus -> {
                     // Do something with the status
                     if (workStatus != null && workStatus.getState().isFinished()) {
 
@@ -285,9 +304,10 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
 
     }
 
-    private void CreateNewFeature(String name, String itemId) {
+    private void CreateNewFeature(String name, String itemId, int structureIndex) {
         Feature feature = new Feature();
         feature.setName(feature.getName());
+        feature.setStructureIndex(structureIndex);
         LayerFeature layerFeature = new LayerFeature();
         layerFeature.setName(name);
         layerFeature.setType(2);
@@ -297,7 +317,7 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
         layerFeature.setStatus(1);
         mLayerFeatureDao.save(layerFeature);
         mFeatureDao.save(feature);
-
+        mAdapter.onLayerFeatureClick(layerFeature);
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
                 .CONNECTED).build();
         Data inputData = new Data.Builder()
@@ -309,15 +329,13 @@ public class FeatureLayerListFragment extends androidx.fragment.app.Fragment imp
                 .putString("children_id", layerFeature.getChildrenId())
                 .putString("children_type", layerFeature.getChildrenType())
                 .build();
-
-
         Data inputDataLayer = new Data.Builder()
                 /*'id','name','structure','content_json','structure_index'*/
 
                 .putString("id", feature.getId())
                 .putString("name", name)
                 .putString("structure", feature.getStructureName())
-                .putString("structure_index", String.valueOf(feature.getStructure_index()))
+                .putString("structure_index", String.valueOf(feature.getStructureIndex()))
                 .putString("content_json", feature.getContentJson())
                 .build();
 

@@ -100,6 +100,7 @@ public class NewExcavationDialog extends DialogFragment implements View.OnClickL
 
     private int mElevationRef = 0;
     private PersianDatePickerDialog mDatePicker;
+    private PersianDatePickerDialog mDateEndPicker;
     private PersianCalendar initDate;
     private LatLng mLatLong;
     private Date mLicenseStartDate;
@@ -148,7 +149,7 @@ public class NewExcavationDialog extends DialogFragment implements View.OnClickL
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         initDate = new PersianCalendar();
-        mLicenseStartDate = initDate.getGregorianChange();
+        mLicenseStartDate = initDate.getTime();
         //  initDate.setTime(new Date());
         // initDate.setPersianDate(1370, 3, 13);
         findViews(v);
@@ -316,7 +317,7 @@ public class NewExcavationDialog extends DialogFragment implements View.OnClickL
 
             mDatePicker.show();
         } else if (v == txtLicenseEndDate) {
-            mDatePicker = new PersianDatePickerDialog(getContext())
+            mDateEndPicker = new PersianDatePickerDialog(getContext())
                     .setPositiveButtonString("تایید")
                     .setNegativeButton("انصراف")
                     .setTodayButton("امروز")
@@ -338,6 +339,7 @@ public class NewExcavationDialog extends DialogFragment implements View.OnClickL
 
                         }
                     });
+            mDateEndPicker.show();
         } else if (v == btnAddLocation) {
             statusCheck();
 

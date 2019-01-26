@@ -8,10 +8,25 @@ import java.util.UUID;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
+/*<item>دیوار</item>
+        <item>پی دیوار</item>
+        <item>کف</item>
+        <item>پله</item>
+        <item>اجاق</item>
+        <item>آتشدان</item>
+        <item>کوره</item>
+        <item>چاله تدفین</item>
+        <item>توده خاکستر</item>
+        <item>توده سنگ</item>
+        <item>توده سفال</item>
+        <item>نخاله</item>
+        <item>آوار</item>
+        <item>دیگر</item>*/
 
 @Entity
 public class Feature implements Parcelable {
+    private int structureIndex;
+
     public static final Creator<Feature> CREATOR = new Creator<Feature>() {
         @Override
         public Feature createFromParcel(Parcel in) {
@@ -29,7 +44,17 @@ public class Feature implements Parcelable {
     private String name;
     private String contentJson;
     private String structureName;
-    private int structure_index;
+    protected Feature(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        contentJson = in.readString();
+        structureName = in.readString();
+        structureIndex = in.readInt();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        deletedAt = in.readString();
+    }
+
     private String createdAt;
     private String updatedAt;
     private String deletedAt;
@@ -38,27 +63,20 @@ public class Feature implements Parcelable {
         id = UUID.randomUUID().toString();
     }
 
-    protected Feature(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        contentJson = in.readString();
-        structureName = in.readString();
-        structure_index = in.readInt();
-        createdAt = in.readString();
-        updatedAt = in.readString();
-        deletedAt = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(contentJson);
         dest.writeString(structureName);
-        dest.writeInt(structure_index);
+        dest.writeInt(structureIndex);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
         dest.writeString(deletedAt);
+    }
+
+    public int getStructureIndex() {
+        return structureIndex;
     }
 
     @Override
@@ -123,11 +141,37 @@ public class Feature implements Parcelable {
         this.deletedAt = deletedAt;
     }
 
-    public int getStructure_index() {
-        return structure_index;
+    public void setStructureIndex(int structureIndex) {
+        this.structureIndex = structureIndex;
     }
 
-    public void setStructure_index(int structure_index) {
-        this.structure_index = structure_index;
+    public enum MyEnum {
+        FEATURE1("دیوار"),
+        FEATURE2("پی دیوار"),
+        FEATURE3("کف"),
+        FEATURE4("پله"),
+        FEATURE5("اجاق"),
+        FEATURE6("آتشدان"),
+        FEATURE7("کوره"),
+        FEATURE8("چاله تدفین"),
+        FEATURE9("توده خاکستر"),
+        FEATURE10("توده سنگ"),
+        FEATURE11("توده سفال"),
+        FEATURE12("نخاله"),
+        FEATURE13("آوار"),
+        FEATURE17("گودال آشغال-چاله"),
+        FEATURE18("راه آب"),
+        FEATURE100("دیگر");
+
+        private String featureName;
+
+        MyEnum(String featureName) {
+            this.featureName = featureName;
+        }
+
+        @Override
+        public String toString() {
+            return featureName;
+        }
     }
 }

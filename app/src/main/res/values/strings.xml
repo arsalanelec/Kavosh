@@ -293,6 +293,13 @@
         <item>طبیعی</item>
     </string-array>
 
+    <string-array name="array_ossuary_entry">
+        <item>کلون</item>
+        <item>لولا</item>
+        <item>محل قفل شدن</item>
+        <item>مشخص نیست</item>
+    </string-array>
+
     <string-array name="array_destruction_factor">
         <item>حیوانات</item>
         <item>گیاهان</item>
@@ -303,6 +310,7 @@
         <item>توصعه صنعتی</item>
         <item>باغات</item>
     </string-array>
+
 
     <string name="title_activity_show_picture">نمایش عکس</string>
     <string name="dummy_button">Dummy Button</string>

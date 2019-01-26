@@ -132,7 +132,7 @@ public class AddLayerPositionDialog extends DialogFragment {
                 return;
             }
 
-            boolean[] coordinations = new boolean[6];
+            boolean[] coordinations = new boolean[8];
             if (binding.chkN.isChecked()) coordinations[0] = true;
             if (binding.chkS.isChecked()) coordinations[1] = true;
             if (binding.chkNW.isChecked()) coordinations[2] = true;

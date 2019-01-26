@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.example.arsalan.kavosh.R;
+import com.example.arsalan.kavosh.activities.SurveyActivity;
 import com.example.arsalan.kavosh.databinding.DialogNewSurveyBinding;
 import com.example.arsalan.kavosh.di.Injectable;
+import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.Survey;
 import com.example.arsalan.kavosh.room.ProjectDao;
 import com.example.arsalan.kavosh.room.SurveyDao;
@@ -54,6 +56,7 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
     private static final int REQ_ADD_LOCATION = 1000;
     private static final int REQ_ENABLE_GPS = 1002;
     private static final String ARG_PARAM3 = "param3";
+    private static final String ARG_PARAM4 = "param4";
 
 
     @Inject
@@ -76,6 +79,7 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
     private Date mLicenseEndDate;
     private DialogNewSurveyBinding binding;
     private String mProjectId;
+    private String mProjectName;
     private String registrationNum;
     private String codeName;
 
@@ -90,12 +94,13 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
      * @param projectId Parameter 1.
      * @return A new instance of fragment NewSurveyDialog.
      */
-    public static NewSurveyDialog newInstance(String projectId, String registrarionCode, String codeName) {
+    public static NewSurveyDialog newInstance(String projectId, String registrarionCode, String codeName, String projectName) {
         NewSurveyDialog fragment = new NewSurveyDialog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, projectId);
         args.putString(ARG_PARAM2, registrarionCode);
         args.putString(ARG_PARAM3, codeName);
+        args.putString(ARG_PARAM4, projectName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +112,7 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
             mProjectId = getArguments().getString(ARG_PARAM1);
             registrationNum = getArguments().getString(ARG_PARAM2);
             codeName = getArguments().getString(ARG_PARAM3);
+            mProjectName = getArguments().getString(ARG_PARAM4);
         }
     }
 
@@ -352,6 +358,12 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
 
                 });
 
+        Intent intent = new Intent();
+        intent.putExtra(MyConst.EXTRA_ID, survey.getId());
+        intent.putExtra(MyConst.EXTRA_PROJECT_NAME, mProjectName);
+        intent.setClass(getActivity(), SurveyActivity.class);
+        startActivity(intent);
+        dismiss();
     }
 
     /**
@@ -365,7 +377,8 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void refreshProjectList();
+        void onAddNewSurvey(Survey survey);
+
     }
 
 

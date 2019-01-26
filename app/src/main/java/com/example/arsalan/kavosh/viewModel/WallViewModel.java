@@ -93,7 +93,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setMortarThickness(String value) {
-        if (Double.valueOf(value) != wall.getMortarThickness()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getMortarThickness()) {
             try {
                 wall.setMortarThickness(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);
@@ -152,7 +152,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setCoatingThickness(String value) {
-        if (Double.valueOf(value) != wall.getCoatingThickness()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getCoatingThickness()) {
             try {
                 wall.setCoatingThickness(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);
@@ -170,7 +170,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setDimX(String value) {
-        if (Double.valueOf(value) != wall.getDimX()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getDimX()) {
             try {
                 wall.setDimX(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);
@@ -188,7 +188,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setDimY(String value) {
-        if (Double.valueOf(value) != wall.getDimY()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getDimY()) {
             try {
                 wall.setDimY(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);
@@ -207,7 +207,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setDimZ(String value) {
-        if (Double.valueOf(value) != wall.getDimZ()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getDimZ()) {
             try {
                 wall.setDimZ(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);
@@ -226,7 +226,7 @@ public class WallViewModel extends BaseObservable {
     }
 
     public void setDepth(String value) {
-        if (Double.valueOf(value) != wall.getDepth()) {
+        if (!value.isEmpty() && Double.valueOf(value) != wall.getDepth()) {
             try {
                 wall.setDepth(Double.parseDouble(value));
                 notifyPropertyChanged(BR.wall);

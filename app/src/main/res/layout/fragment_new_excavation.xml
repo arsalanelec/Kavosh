@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray"
-    android:layoutDirection="rtl"
-    android:orientation="vertical"
-    tools:context=".dialog.NewExcavationDialog">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:paddingStart="16dp"
-        android:text="ایجاد پروژه کاوش"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:background="@color/gray"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        tools:context=".dialog.NewExcavationDialog">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:paddingStart="16dp"
+            android:text="ایجاد پروژه کاوش"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -215,30 +214,30 @@
                     android:text="عمق یافته ها نسبت به بنچ مارک اصلی ثبت شود" />
             </RadioGroup>
         </LinearLayout>
-    </ScrollView>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:elevation="2dp"
-        android:padding="16dp">
-
-        <Button
-            android:id="@+id/btnCreate"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@color/action"
-            android:text="ایجاد" />
+            android:background="@color/gray"
+            android:elevation="2dp"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/btnCancel"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="انصراف" />
-    </FrameLayout>
-</LinearLayout>
+            <Button
+                android:id="@+id/btnCreate"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:background="@color/action"
+                android:text="ایجاد" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="انصراف" />
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>

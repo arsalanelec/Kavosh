@@ -111,28 +111,28 @@
                         <item id="4">استوانه ای</item>
                     </string-coordinations>-->
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/rbIrregular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="نامنظم" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/rbSphere"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="گرد" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/rbPolygon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="چندوجهی" />
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/rbCylindrical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

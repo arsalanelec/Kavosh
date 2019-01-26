@@ -129,9 +129,10 @@ public class MainActivity extends AppCompatActivity implements Injectable, HasSu
                     mToken.setAccessToken(response.body().getAccessTokenWOBearer());
 
                     getUserDetail(response.body().getAccessToken());
-                } else if (response.code() == 401) {
-                    Toast.makeText(mContext, "خطا در ورود!\nلطفا نام کاربری و رمز عبور را بررسی نمایید.", Toast.LENGTH_LONG).show();
                 } else {
+                    if (response.code() == 401) {
+                        Toast.makeText(mContext, "خطا در ورود!\nلطفا نام کاربری و رمز عبور را بررسی نمایید.", Toast.LENGTH_LONG).show();
+                    }
                     try {
                         Log.d(TAG, "onResponse: " + response.errorBody().string() + "\n code" + response.code());
                         Toast.makeText(MainActivity.this, response.errorBody().string(), Toast.LENGTH_SHORT).show();

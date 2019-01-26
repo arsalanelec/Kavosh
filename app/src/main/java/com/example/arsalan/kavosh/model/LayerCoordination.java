@@ -19,7 +19,7 @@ public class LayerCoordination implements Parcelable {
         }
     };
     private String name;
-    private boolean[] coordinations = new boolean[6];
+    private boolean[] coordinations = new boolean[8];
 
     public LayerCoordination() {
     }

@@ -9,7 +9,7 @@
 
         <variable
             name="itemClickListener"
-            type="com.example.arsalan.kavosh.fragment.FeatureLayerListFragment.LayerFeatureClickListener" />
+            type="com.example.arsalan.kavosh.fragment.LayerFeatureListFragment.LayerFeatureClickListener" />
     </data>
 
     <LinearLayout

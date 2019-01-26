@@ -14,34 +14,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.activities.GalleryActivity;
-import com.example.arsalan.kavosh.databinding.FragmentWallBinding;
+import com.example.arsalan.kavosh.databinding.FragmentFtrStoveBinding;
 import com.example.arsalan.kavosh.databinding.ItemAudioListBinding;
-import com.example.arsalan.kavosh.databinding.ItemCompositionBinding;
 import com.example.arsalan.kavosh.databinding.ItemGalleryBinding;
 import com.example.arsalan.kavosh.di.Injectable;
-import com.example.arsalan.kavosh.dialog.AddCompositionDialog;
 import com.example.arsalan.kavosh.dialog.PhotoReviewDialog;
 import com.example.arsalan.kavosh.dialog.VoiceRecordDialog;
 import com.example.arsalan.kavosh.interfaces.AudioMemoEventListener;
 import com.example.arsalan.kavosh.interfaces.PhotoItemClickListener;
 import com.example.arsalan.kavosh.model.AudioMemo;
-import com.example.arsalan.kavosh.model.Composition;
 import com.example.arsalan.kavosh.model.Feature;
 import com.example.arsalan.kavosh.model.FileDownloaded;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.Photo;
-import com.example.arsalan.kavosh.model.WallFeature;
+import com.example.arsalan.kavosh.model.StoveFeature;
 import com.example.arsalan.kavosh.viewModel.AudioListViewModel;
 import com.example.arsalan.kavosh.viewModel.FileViewModel;
 import com.example.arsalan.kavosh.viewModel.PhotoListViewModel;
-import com.example.arsalan.kavosh.viewModel.WallViewModel;
 import com.example.arsalan.kavosh.viewModel.factory.MyViewModelFactory;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.enums.EPickType;
@@ -69,13 +65,13 @@ import static com.example.arsalan.kavosh.model.MyConst.BASE_URL;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link WallFragment.OnFragmentInteractionListener} interface
+ * {@link FtrStoveFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link WallFragment#newInstance} factory method to
+ * Use the {@link FtrStoveFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallFragment extends androidx.fragment.app.Fragment implements Injectable {
-    private static final String TAG = "WallFragment";
+public class FtrStoveFragment extends androidx.fragment.app.Fragment implements Injectable {
+    private static final String TAG = "FtrWallFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -83,12 +79,12 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
     private static final int REQ_ADD_COMPOSITION = 1;
     private static final int REQ_RECORD_AUDIO = 2;
     private static final int REQ_ADD_SUBTITLE_PHOTO = 3;
+    private static final int REQ_EDIT_COMPOSITION = 4;
+    private static final int REQ_REMOVE_COMPOSITION = 5;
     @Inject
     MyViewModelFactory factory;
     private String mLayerName;
     private String mFeatureId;
-    private List<Composition> mCompositionList;
-    private LLCompositionAdapter LLCompositionAdapter;
     private PhotoAdapter mGalleryAdapter;
     private ArrayList<Photo> mPhotoList = new ArrayList<Photo>();
     private LLAudioAdapter mAudioAdapter;
@@ -96,14 +92,13 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
     private Feature mFeature;
-    private WallViewModel mWallViewModel;
 
-    public WallFragment() {
+    public FtrStoveFragment() {
         // Required empty public constructor
     }
 
-    public static WallFragment newInstance(Feature feature) {
-        WallFragment fragment = new WallFragment();
+    public static FtrStoveFragment newInstance(Feature feature) {
+        FtrStoveFragment fragment = new FtrStoveFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, feature);
         fragment.setArguments(args);
@@ -123,29 +118,14 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentWallBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wall, container, false);
+        FragmentFtrStoveBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_stove, container, false);
 
-        mCompositionList = new ArrayList<>();
-        LLCompositionAdapter = new LLCompositionAdapter(mCompositionList, binding.linearLayout);
-
-        WallFeature wall;
+        StoveFeature stove;
         if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
             Gson gson = new Gson();
-            wall = gson.fromJson(mFeature.getContentJson(), WallFeature.class);
+            stove = gson.fromJson(mFeature.getContentJson(), StoveFeature.class);
         } else {
-            wall = new WallFeature();
-        }
-
-        try {
-            Gson gson = new Gson();
-            List<Composition> list = gson.fromJson(wall.getCompositionJson(), new TypeToken<List<Composition>>() {
-            }.getType());
-            mCompositionList.removeAll(mCompositionList);
-            mCompositionList.addAll(list);
-            LLCompositionAdapter.notifyDataSetChanged();
-
-        } catch (Exception e) {
-
+            stove = new StoveFeature();
         }
         binding.rvGallery.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mGalleryAdapter = new PhotoAdapter(mPhotoList);
@@ -153,49 +133,39 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
 
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
-        AudioListViewModel audioVM = ViewModelProviders.of(WallFragment.this, factory).get(AudioListViewModel.class);
+        AudioListViewModel audioVM = ViewModelProviders.of(FtrStoveFragment.this, factory).get(AudioListViewModel.class);
         audioVM.initial(mFeature.getId());
-        audioVM.getAudioMemoList().observe(WallFragment.this, audioMemoList -> {
+        audioVM.getAudioMemoList().observe(FtrStoveFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
             mAudioAdapter.notifyDataSetChanged();
         });
         setupPhotoRecycler();
 
-        mWallViewModel = new WallViewModel(wall);
-        //mWallViewModel.setWall(wall);
-        binding.setWall(mWallViewModel);
+        binding.setStove(stove);
 
-        ArrayAdapter<String> textAdapter1 = new ArrayAdapter<String>(
+
+        ArrayAdapter<String> textAdapter2 = new ArrayAdapter<String>(
                 getContext(),
-                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.array_soil_color));
-        binding.txtSoilColor.setAdapter(textAdapter1);
-        binding.txtCoatingColor.setAdapter(textAdapter1);
-        binding.txtMortarColor.setAdapter(textAdapter1);
+                android.R.layout.simple_dropdown_item_1line, StoveFeature.contentHints);
+        binding.etContents.setAdapter(textAdapter2);
+        binding.etContents.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        binding.etContents.setOnFocusChangeListener((view, b) -> {
+            if (b) binding.etContents.showDropDown();
+        });
 
-        mWallViewModel.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        stove.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                Log.d(TAG, "onPropertyChanged: sender:mWallViewModel wall:" + mWallViewModel.getWall());
-                try {
-                    Gson gson = new Gson();
-                    String contentJson = gson.toJson(mWallViewModel.getWall());
-                    mFeature.setContentJson(contentJson);
-                    List<Composition> list = gson.fromJson(mWallViewModel.getWallComposition(), new TypeToken<List<Composition>>() {
-                    }.getType());
-                    mCompositionList.removeAll(mCompositionList);
-                    mCompositionList.addAll(list);
-                    LLCompositionAdapter.notifyDataSetChanged();
-                    mListener.onUpdateFeature(mFeature);
-
-                } catch (Exception e) {
-
-                }
+                Gson gson = new Gson();
+                String contentJson = gson.toJson(stove);
+                mFeature.setContentJson(contentJson);
+                mListener.onUpdateFeature(mFeature);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
             VoiceRecordDialog dialog = new VoiceRecordDialog();
-            dialog.setTargetFragment(WallFragment.this, REQ_RECORD_AUDIO);
+            dialog.setTargetFragment(FtrStoveFragment.this, REQ_RECORD_AUDIO);
             dialog.show(getFragmentManager(), "");
         });
         binding.btnAddPhoto.setOnClickListener(v -> {
@@ -243,7 +213,7 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
                             }
 
                             PhotoReviewDialog dialog = PhotoReviewDialog.newInstance(String.valueOf(r.getUri()));
-                            dialog.setTargetFragment(WallFragment.this, REQ_ADD_SUBTITLE_PHOTO);
+                            dialog.setTargetFragment(FtrStoveFragment.this, REQ_ADD_SUBTITLE_PHOTO);
                             dialog.show(getFragmentManager(), "");
                         } else {
                             Toast.makeText(getContext(), "خطا:" + r.getError().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
@@ -253,20 +223,14 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
             }).show(getFragmentManager());
         });
 
-        binding.btnAddComposition.setOnClickListener(view -> {
-            AddCompositionDialog dialog = new AddCompositionDialog();
-            dialog.setTargetFragment(WallFragment.this, REQ_ADD_COMPOSITION);
-            dialog.show(getFragmentManager(), "");
-        });
-
 
         return binding.getRoot();
     }
 
     private void setupPhotoRecycler() {
-        PhotoListViewModel photoListViewModel = ViewModelProviders.of(WallFragment.this, factory).get(PhotoListViewModel.class);
+        PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrStoveFragment.this, factory).get(PhotoListViewModel.class);
         photoListViewModel.initial(mFeature.getId());
-        photoListViewModel.getPhotoList().observe(WallFragment.this, photos -> {
+        photoListViewModel.getPhotoList().observe(FtrStoveFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
                 mPhotoList.removeAll(mPhotoList);
@@ -278,17 +242,7 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_ADD_COMPOSITION) {
-            if (resultCode == RESULT_OK) {
-                Composition composition = data.getParcelableExtra(MyConst.EXTRA_MODEL);
-                mCompositionList.add(composition);
-                LLCompositionAdapter.notifyDataSetChanged();
-                Gson gson = new Gson();
-                String string = gson.toJson(mCompositionList);
-                Log.d(TAG, "onActivityResult: gson:" + string);
-                mWallViewModel.setWallComposition(string);
-            }
-        }
+
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
@@ -311,6 +265,7 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
                 Toast.makeText(getContext(), "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     @Override
@@ -349,51 +304,6 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
         void onUploadPhoto(Photo photo);
     }
 
-    private class LLCompositionAdapter {
-        LinearLayout linearLayout;
-        List<Composition> arrayList;
-
-        public LLCompositionAdapter(List<Composition> arrayList, LinearLayout linearLayout) {
-            this.arrayList = arrayList;
-            this.linearLayout = linearLayout;
-            notifyDataSetChanged();
-        }
-
-        private void notifyDataSetChanged() {
-            linearLayout.removeAllViews();
-            View header = LayoutInflater.from(getContext()).inflate(R.layout.header_composition, null);
-            linearLayout.addView(header);
-            for (int i = 0; i < getCount(); i++) {
-                linearLayout.addView(getView(i, null, linearLayout));
-            }
-        }
-
-        public int getCount() {
-            return arrayList.size();
-        }
-
-        public Composition getItem(int position) {
-            return arrayList.get(position);
-        }
-
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            ItemCompositionBinding binding;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_composition, null);
-                binding = DataBindingUtil.bind(convertView);
-                convertView.setTag(binding);
-            } else {
-                binding = (ItemCompositionBinding) convertView.getTag();
-            }
-            binding.setComposition(getItem(position));
-            return binding.getRoot();
-
-        }
-    }
 
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolderItem> implements PhotoItemClickListener {
         private final int VIEW_TYPE_ADD_BUTTON = 1;
@@ -515,7 +425,7 @@ public class WallFragment extends androidx.fragment.app.Fragment implements Inje
 
             binding.setAudio(getItem(position));
             binding.setOnAudioClickListener(this);
-            FileViewModel viewModel = ViewModelProviders.of(WallFragment.this, factory).get(FileViewModel.class);
+            FileViewModel viewModel = ViewModelProviders.of(FtrStoveFragment.this, factory).get(FileViewModel.class);
             viewModel.initial(linearLayout.getContext(), BASE_URL + getItem(position).getUrl(), getItem(position).getTitle());
 
             binding.setFile(viewModel.getFileDownloaded());
