@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.DialogAddLayerPositionBinding;
@@ -35,6 +36,7 @@ public class AddLayerPositionDialog extends DialogFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
+    private static final String ARG_PARAM4 = "param4";
 
     // TODO: Rename and change types of parameters
     private String mTitle;
@@ -42,6 +44,7 @@ public class AddLayerPositionDialog extends DialogFragment {
 
     private OnFragmentInteractionListener mListener;
     private int mIndex;
+    private String[] mLayerNames;
 
     public AddLayerPositionDialog() {
         // Required empty public constructor
@@ -55,21 +58,25 @@ public class AddLayerPositionDialog extends DialogFragment {
      * @return A new instance of fragment AddLayerPositionDialog.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddLayerPositionDialog newInstance(String param1, LayerCoordination layerCoordination, int index) {
+    public static AddLayerPositionDialog newInstance(String param1, LayerCoordination layerCoordination, int index, String[] layerNames) {
         AddLayerPositionDialog fragment = new AddLayerPositionDialog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putParcelable(ARG_PARAM2, layerCoordination);
         args.putInt(ARG_PARAM3, index);
+        args.putStringArray(ARG_PARAM4, layerNames);
+
         //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static AddLayerPositionDialog newInstance(String param1) {
+    public static AddLayerPositionDialog newInstance(String param1, String[] layerNames) {
         AddLayerPositionDialog fragment = new AddLayerPositionDialog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putStringArray(ARG_PARAM4, layerNames);
+
         //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -83,6 +90,7 @@ public class AddLayerPositionDialog extends DialogFragment {
             mTitle = getArguments().getString(ARG_PARAM1);
             mLayerCoordination = getArguments().getParcelable(ARG_PARAM2);
             mIndex = getArguments().getInt(ARG_PARAM3, 0);
+            mLayerNames = getArguments().getStringArray(ARG_PARAM4);
         }
         if (mLayerCoordination == null) {
             mLayerCoordination = new LayerCoordination();
@@ -94,7 +102,17 @@ public class AddLayerPositionDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         DialogAddLayerPositionBinding binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_layer_position, container, false);
         binding.txtTitle.setText(mTitle);
-        binding.etLayerName.setText(mLayerCoordination.getName());
+        ArrayAdapter<String> arrAdapter1 = new ArrayAdapter<String>(
+                getContext(),
+                android.R.layout.simple_dropdown_item_1line, mLayerNames);
+        binding.spnLayerNames.setAdapter(arrAdapter1);
+
+        for (int i = 0; i < mLayerNames.length; i++) {
+            if (mLayerNames[i].equals(mLayerCoordination.getName())) {
+                binding.spnLayerNames.setSelection(i);
+                break;
+            }
+        }
 
         binding.chkN.setChecked(mLayerCoordination.getCoordinations()[0]);
         binding.chkS.setChecked(mLayerCoordination.getCoordinations()[1]);
@@ -126,11 +144,7 @@ public class AddLayerPositionDialog extends DialogFragment {
             binding.chkE.setEnabled(!b);
         });
         binding.btnSubmit.setOnClickListener(view -> {
-            if (binding.etLayerName.getText().length() < 1) {
-                binding.etLayerName.setError("نام لایه خالی است");
-                binding.etLayerName.requestFocus();
-                return;
-            }
+
 
             boolean[] coordinations = new boolean[8];
             if (binding.chkN.isChecked()) coordinations[0] = true;
@@ -151,7 +165,7 @@ public class AddLayerPositionDialog extends DialogFragment {
                 coordinations[6] = true;
                 coordinations[7] = true;
             }
-            mLayerCoordination.setName(binding.etLayerName.getText().toString());
+            mLayerCoordination.setName((String) binding.spnLayerNames.getSelectedItem());
             mLayerCoordination.setCoordinations(coordinations);
             Intent intent = new Intent();
             intent.putExtra(EXTRA_MODEL, mLayerCoordination);

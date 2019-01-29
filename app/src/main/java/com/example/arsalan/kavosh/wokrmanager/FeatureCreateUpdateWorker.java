@@ -64,17 +64,10 @@ public class FeatureCreateUpdateWorker extends Worker implements Injectable {
                 Log.d(TAG, "run: response.error:" + response.errorBody().string());
                 return Result.retry();
             }
-        } catch (SocketTimeoutException e) {
-            e.printStackTrace();
-            return Result.retry();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Result.failure();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            Log.d(TAG, "doWork: error:" + t.getLocalizedMessage());
             return Result.failure();
         }
-
     }
 
 }

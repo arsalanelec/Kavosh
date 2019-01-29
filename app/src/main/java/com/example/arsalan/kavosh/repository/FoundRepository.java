@@ -37,10 +37,10 @@ public class FoundRepository {
         this.executor = executor;
     }
 
-    public LiveData<List<Found>> getAllByLayerId(String layerId, int type) {
-        refreshList(layerId);
+    public LiveData<List<Found>> getList(String excavationItemId, String layerFeatureId, int type) {
+        refreshList(excavationItemId);
         // return a LiveData directly from the database.
-        return foundDao.loadAllListByExcavationItemId(layerId, type);
+        return foundDao.loadList(excavationItemId, layerFeatureId, type);
     }
 
 
@@ -51,7 +51,7 @@ public class FoundRepository {
             try {
                 Response<List<Found>> response = call.execute();
                 if (response.isSuccessful()) {
-
+                    foundDao.deleteWithExcavationItemId(id);
                     Log.d(getClass().getCanonicalName(), "run: save list:" + foundDao.saveList(response.body()));
 
                 } else {

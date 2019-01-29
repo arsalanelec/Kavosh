@@ -272,7 +272,7 @@
                 android:layout_weight="1"
                 android:inputType="number"
                 android:selectAllOnFocus="true"
-                android:text="@={architecture.lenght1}" />
+                android:text="@={architecture.length1}" />
 
             <TextView
                 style="@style/text_item"

@@ -20,8 +20,8 @@ public class FoundViewModel extends ViewModel {
 
     }
 
-    public void initial(String layerId, int type) {
-        foundLiveData = foundRepository.getAllByLayerId(layerId, type);
+    public void initial(String excavationItemId,String layerFeatureId, int type) {
+        foundLiveData = foundRepository.getList(excavationItemId,layerFeatureId, type);
     }
 
     public LiveData<List<Found>> getFounds() {

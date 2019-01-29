@@ -22,8 +22,14 @@ public interface FoundDao {
     @Query("SELECT * FROM Found WHERE excavationItemId=:id AND type=:type")
     LiveData<List<Found>> loadAllListByExcavationItemId(String id, int type);
 
+    @Query("SELECT * FROM Found WHERE excavationItemId=:excavationItemId AND layerFeatureId=:layerFeatureId AND type=:type")
+    LiveData<List<Found>> loadList(String excavationItemId, String layerFeatureId, int type);
+
     @Query("SELECT * FROM Found WHERE id=:id")
     LiveData<Found> loadById(String id);
+
+    @Query("Delete From Found WHERE excavationItemId=:id")
+    void deleteWithExcavationItemId(String id);
 
     @Query("Delete From Found WHERE id=:id")
     void delete(String id);

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.FragmentLayerPositionBinding;
@@ -27,7 +26,6 @@ import com.example.arsalan.kavosh.room.LayerFeatureDao;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -91,7 +89,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
     private List<String> mLayerUderList;
     private List<String> mLayerSimilarList;
     private String mExcavationItemId;
-    private List<LayerFeature> mLayerList;
+    private String[] mLayerNameArray;
     private FragmentLayerPositionBinding binding;
 
     public LayerPositionFragment() {
@@ -196,7 +194,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
                     Gson gson = new Gson();
                     try {
                         String s = gson.toJson(mLayerPosition);
-                        mListener.UpdateLayerPosition(s);
+                        mListener.UpdateLayerFeaturePosition(s);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -205,8 +203,12 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
         });*/
         LiveData<List<LayerFeature>> layerFeatureListLive = mLayerFeatureDao.loadAllListByItemId(mExcavationItemId);
         layerFeatureListLive.observe(LayerPositionFragment.this, layerFeatureList -> {
-            mLayerList = layerFeatureList;
 
+
+            mLayerNameArray = new String[layerFeatureList.size()];
+            for(int i=0;i<layerFeatureList.size();i++) {
+                mLayerNameArray[i] = layerFeatureList.get(i).getName();
+            }
         });
 
 /*
@@ -228,7 +230,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
                     Gson gson = new Gson();
                     try {
                         String s = gson.toJson(mLayerPosition);
-                        mListener.UpdateLayerPosition(s);
+                        mListener.UpdateLayerFeaturePosition(s);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -317,7 +319,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
             Gson gson = new Gson();
             try {
                 String s = gson.toJson(mLayerPosition);
-                mListener.UpdateLayerPosition(s);
+                mListener.UpdateLayerFeaturePosition(s);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -346,95 +348,98 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
         AddLayerPositionDialog dialog;
         switch (view.getId()) {
             case R.id.btnAddBesideLayer:
-                dialog = AddLayerPositionDialog.newInstance("مجاور با لایه:");
+                dialog = AddLayerPositionDialog.newInstance("مجاور با لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_BESIDE_COORDINATION);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.btnAddTopOfLayer:
-                dialog = AddLayerPositionDialog.newInstance("روی لایه:");
+                dialog = AddLayerPositionDialog.newInstance("روی لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_TOP_OF_LAYER);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.btnAddAroundLayer:
-                dialog = AddLayerPositionDialog.newInstance("محصور شده با لایه:");
+                dialog = AddLayerPositionDialog.newInstance("محصور شده با لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_AROUND_LAYER);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.btnAddInsideLayer:
-                dialog = AddLayerPositionDialog.newInstance("محصور کرده لایه:");
+                dialog = AddLayerPositionDialog.newInstance("محصور کرده لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_INSIDE_LAYER);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.btnAddCutedByLayer:
-                dialog = AddLayerPositionDialog.newInstance("بریده شده با لایه:");
+                dialog = AddLayerPositionDialog.newInstance("بریده شده با لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_CUTED_BY_LAYER);
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.btnAddCuttingLayer:
-                dialog = AddLayerPositionDialog.newInstance("بریده است لایه:");
+                dialog = AddLayerPositionDialog.newInstance("بریده است لایه:",mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, REQ_ADD_CUTTING_LAYER);
                 dialog.show(getFragmentManager(), "");
                 break;
-            case R.id.btnAddUnderLayer:
-                if (mLayerList.size() > 0) {
+            case R.id.btnAddUnderLayer: {
+/*
                     ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-                    for (int i = 0; i < mLayerList.size(); i++) {
+                for (String mLayerName : mLayerNames) {
+
+                }
                         HashMap<String, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
-                        hashMap.put("name", mLayerList.get(i).getName());
+                        hashMap.put("name", mLayerNames.get(i));
+                hashMap.
                         arrayList.add(hashMap);//add the hashmap into arrayList
                     }
                     SimpleAdapter adapter = new SimpleAdapter(getContext(), arrayList, android.R.layout.simple_list_item_1,
                             new String[]{"name"},
-                            new int[]{android.R.id.text1});
-                    AlertDialog dialog2 = new AlertDialog.Builder(getContext())
-                            .setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    mLayerUderList.add(mLayerList.get(i).getName());
-                                    adapterLayerUder.notifyDataSetChanged();
-                                    dialogInterface.dismiss();
-                                    Gson gson = new Gson();
-                                    try {
-                                        String s = gson.toJson(mLayerPosition);
-                                        mListener.UpdateLayerPosition(s);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                            new int[]{android.R.id.text1});*/
+                AlertDialog dialog2 = new AlertDialog.Builder(getContext())
+                        .setSingleChoiceItems(mLayerNameArray, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mLayerUderList.add(mLayerNameArray[i]);
+                                adapterLayerUder.notifyDataSetChanged();
+                                dialogInterface.dismiss();
+                                Gson gson = new Gson();
+                                try {
+                                    String s = gson.toJson(mLayerPosition);
+                                    mListener.UpdateLayerFeaturePosition(s);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            })
-                            .create();
-                    dialog2.show();
-                }
-                break;
-            case R.id.btnAddSimilarLayer:
-                if (mLayerList.size() > 0) {
-                    ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-                    for (int i = 0; i < mLayerList.size(); i++) {
-                        HashMap<String, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
-                        hashMap.put("name", mLayerList.get(i).getName());
-                        arrayList.add(hashMap);//add the hashmap into arrayList
-                    }
-                    SimpleAdapter adapter = new SimpleAdapter(getContext(), arrayList, android.R.layout.simple_list_item_1,
-                            new String[]{"name"},
-                            new int[]{android.R.id.text1});
-                    AlertDialog dialog2 = new AlertDialog.Builder(getContext()).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mLayerSimilarList.add(mLayerList.get(i).getName());
-                            adapterLayerSimilar.notifyDataSetChanged();
-                            dialogInterface.dismiss();
-                            Gson gson = new Gson();
-                            try {
-                                String s = gson.toJson(mLayerPosition);
-                                mListener.UpdateLayerPosition(s);
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
+                        })
+                        .create();
+                dialog2.show();
+            }
+            break;
+            case R.id.btnAddSimilarLayer: {
+    /*if (mLayerList.size() > 0) {
+        ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
+        for (int i = 0; i < mLayerList.size(); i++) {
+            HashMap<String, String> hashMap = new HashMap<>();//create a hashmap to store the data in key value pair
+            hashMap.put("name", mLayerList.get(i).getName());
+            arrayList.add(hashMap);//add the hashmap into arrayList
+        }
+        SimpleAdapter adapter = new SimpleAdapter(getContext(), arrayList, android.R.layout.simple_list_item_1,
+                new String[]{"name"},
+                new int[]{android.R.id.text1});*/
+                AlertDialog dialog2 = new AlertDialog.Builder(getContext()).setSingleChoiceItems(mLayerNameArray, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mLayerSimilarList.add(mLayerNameArray[i]);
+                        adapterLayerSimilar.notifyDataSetChanged();
+                        dialogInterface.dismiss();
+                        Gson gson = new Gson();
+                        try {
+                            String s = gson.toJson(mLayerPosition);
+                            mListener.UpdateLayerFeaturePosition(s);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }).create();
-                    dialog2.show();
-                }
-                break;
+                    }
+                }).create();
+                dialog2.show();
+            }
+            break;
 
         }
     }
@@ -450,7 +455,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void UpdateLayerPosition(String positionJson);
+        void UpdateLayerFeaturePosition(String positionJson);
     }
 
     private class LLLayerCoordinationAdapter {
@@ -467,7 +472,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
             notifyDataSetChanged();
         }
 
-        private void notifyDataSetChanged() {
+        public void notifyDataSetChanged() {
             linearLayout.removeAllViews();
            /* View header = LayoutInflater.from(getContext()).inflate(R.layout.header_composition, null);
             linearLayout.addView(header);*/
@@ -502,7 +507,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
             View v = binding.getRoot();
             v.setOnClickListener(view -> {
 
-                AddLayerPositionDialog dialog = AddLayerPositionDialog.newInstance(title, getItem(position), position);
+                AddLayerPositionDialog dialog = AddLayerPositionDialog.newInstance(title, getItem(position), position,mLayerNameArray);
                 dialog.setTargetFragment(LayerPositionFragment.this, requestCode);
                 dialog.show(getFragmentManager(), "");
             });
@@ -524,7 +529,7 @@ public class LayerPositionFragment extends androidx.fragment.app.Fragment implem
             notifyDataSetChanged();
         }
 
-        private void notifyDataSetChanged() {
+        public void notifyDataSetChanged() {
             linearLayout.removeAllViews();
            /* View header = LayoutInflater.from(getContext()).inflate(R.layout.header_composition, null);
             linearLayout.addView(header);*/

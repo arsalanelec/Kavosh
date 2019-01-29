@@ -84,23 +84,24 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
     @Inject
     MyViewModelFactory factory;
     private String mLayerName;
-    private String mFeatureId;
     private PhotoAdapter mGalleryAdapter;
     private ArrayList<Photo> mPhotoList = new ArrayList<Photo>();
     private LLAudioAdapter mAudioAdapter;
     private List<AudioMemo> mAudioLst = new ArrayList<>();
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
-    private Feature mFeature;
 
     public FtrStoveFragment() {
         // Required empty public constructor
     }
 
-    public static FtrStoveFragment newInstance(Feature feature) {
+    private String mFeatureId;
+    private String mFeatureContent;
+    public static FtrStoveFragment newInstance(String featureId, String contentJson) {
         FtrStoveFragment fragment = new FtrStoveFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, feature);
+        args.putString(ARG_PARAM1, featureId);
+        args.putString(ARG_PARAM2, contentJson);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,11 +110,10 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFeature = getArguments().getParcelable(ARG_PARAM1);
-            Log.d(TAG, "onCreate: mfeature ID:" + mFeature.getId());
+            mFeatureId = getArguments().getString(ARG_PARAM1);
+            mFeatureContent = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,9 +121,9 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
         FragmentFtrStoveBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_stove, container, false);
 
         StoveFeature stove;
-        if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
+        if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            stove = gson.fromJson(mFeature.getContentJson(), StoveFeature.class);
+            stove = gson.fromJson(mFeatureContent, StoveFeature.class);
         } else {
             stove = new StoveFeature();
         }
@@ -134,7 +134,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
         AudioListViewModel audioVM = ViewModelProviders.of(FtrStoveFragment.this, factory).get(AudioListViewModel.class);
-        audioVM.initial(mFeature.getId());
+        audioVM.initial(mFeatureId);
         audioVM.getAudioMemoList().observe(FtrStoveFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
@@ -159,8 +159,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Gson gson = new Gson();
                 String contentJson = gson.toJson(stove);
-                mFeature.setContentJson(contentJson);
-                mListener.onUpdateFeature(mFeature);
+                mListener.onUpdateFeature(mFeatureContent);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
@@ -229,7 +228,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
 
     private void setupPhotoRecycler() {
         PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrStoveFragment.this, factory).get(PhotoListViewModel.class);
-        photoListViewModel.initial(mFeature.getId());
+        photoListViewModel.initial(mFeatureId);
         photoListViewModel.getPhotoList().observe(FtrStoveFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
@@ -246,7 +245,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
-                audio.setAudioable_id(mFeature.getId());
+                audio.setAudioable_id(mFeatureId);
                 audio.setAudioable_type("App\\FEATURE");
                 audio.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 audio.setLocalPath(data.getStringExtra(MyConst.EXTRA_FILE_PATH));
@@ -258,7 +257,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
 
                 Photo photo = new Photo();
                 photo.setLocalPath(mPhotoLocalPath);
-                photo.setPhotoableId(mFeature.getId());
+                photo.setPhotoableId(mFeatureId);
                 photo.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 photo.setPhotoableType("App\\FEATURE");
                 mListener.onUploadPhoto(photo);
@@ -297,7 +296,7 @@ public class FtrStoveFragment extends androidx.fragment.app.Fragment implements 
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(Feature feature);
+        void onUpdateFeature(String featureContentJson);
 
         void onUploadAudio(AudioMemo audio);
 

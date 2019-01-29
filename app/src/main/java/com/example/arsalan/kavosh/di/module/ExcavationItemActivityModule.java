@@ -24,5 +24,5 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class ExcavationItemActivityModule {
     @ContributesAndroidInjector(modules = FragmentBuildersModule.class)
-    abstract ExcavationItemActivity contributeMExcavationItemActivity();
+    abstract ExcavationItemActivity contributeExcavationItemActivity();
 }

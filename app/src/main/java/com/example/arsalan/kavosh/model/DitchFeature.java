@@ -28,7 +28,10 @@ public class DitchFeature extends BaseObservable {
     }
 
     public void setShape(String shape) {
-        this.shape = shape;
+        if (this.shape == null || !this.shape.equals(shape)) {
+            this.shape = shape;
+            notifyChange();
+        }
     }
 
     @Bindable

@@ -1,12 +1,16 @@
 package com.example.arsalan.kavosh.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.FragmentHeightLevelsBinding;
@@ -21,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -109,8 +114,13 @@ public class HeightLevelsFragment extends androidx.fragment.app.Fragment {
 
         Gson gson = new Gson();
         try {
-            List<HeightLevel> list = gson.fromJson(mHLJsonH, new TypeToken<List<HeightLevel>>() {
-            }.getType());
+            List<HeightLevel> list;
+            if (mHLJsonH != null && !mHLJsonH.isEmpty()) {
+                list = gson.fromJson(mHLJsonH, new TypeToken<List<HeightLevel>>() {
+                }.getType());
+            } else {
+                list = new ArrayList<>();
+            }
             mHeightLevelListH.addAll(list);
             mAdapterH.notifyDataSetChanged();
 
@@ -119,8 +129,14 @@ public class HeightLevelsFragment extends androidx.fragment.app.Fragment {
         }
 
         try {
-            List<HeightLevel> list = gson.fromJson(mHLJsonL, new TypeToken<List<HeightLevel>>() {
-            }.getType());
+            List<HeightLevel> list;
+            if (mHLJsonL != null && !mHLJsonL.isEmpty()) {
+
+                list = gson.fromJson(mHLJsonL, new TypeToken<List<HeightLevel>>() {
+                }.getType());
+            } else {
+                list = new ArrayList<>();
+            }
             mHeightLevelListL.addAll(list);
             mAdapterL.notifyDataSetChanged();
 
@@ -221,7 +237,7 @@ public class HeightLevelsFragment extends androidx.fragment.app.Fragment {
 
     }
 
-    private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+    private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements OnHeightLevelEventListener {
         List<HeightLevel> heightLevelList;
         int listType;
 
@@ -240,23 +256,70 @@ public class HeightLevelsFragment extends androidx.fragment.app.Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
             viewHolder.binding.setHeightLevel(heightLevelList.get(i));
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AddHeightLevelDialog dialog = AddHeightLevelDialog.newInstance(heightLevelList.get(i), i);
-                    if (listType == REQ_EDIT_HEIGHTLEVEL_H)
-                        dialog.setTargetFragment(HeightLevelsFragment.this, REQ_EDIT_HEIGHTLEVEL_H);
-                    else
-                        dialog.setTargetFragment(HeightLevelsFragment.this, REQ_EDIT_HEIGHTLEVEL_L);
+            viewHolder.binding.setIndex(i);
+            viewHolder.binding.setView(viewHolder.binding.textViewOptions);
+            viewHolder.binding.setOnClick(RecyclerAdapter.this);
 
-                    dialog.show(getFragmentManager(), "");
-                }
-            });
         }
 
         @Override
         public int getItemCount() {
             return heightLevelList.size();
+        }
+
+        @Override
+        public void onOptionsClicked(HeightLevel heightLevel, View view, int index) {
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(getContext(), view);
+            //inflating menu from xml resource
+
+            popup.inflate(R.menu.menu_delete_edit);
+
+            //adding click listener
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_delete:
+                        TextView titleTV = new TextView(getContext());
+                        titleTV.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        titleTV.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        titleTV.setText("حذف");
+                        int dip = 8;
+                        int px = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip,
+                                getResources().getDisplayMetrics()
+                        );
+                        titleTV.setPadding(px, px, px, px);
+                        new AlertDialog.Builder(getContext())
+                                .setCustomTitle(titleTV)
+                                .setMessage("آیا مایلید این مورد حذف شود؟")
+                                .setPositiveButton("بلی", (dialogInterface, i) -> {
+                                    mHeightLevelListH.remove(index);
+                                    notifyDataSetChanged();
+                                    Gson gson = new Gson();
+                                    String string = gson.toJson(mHeightLevelListH);
+                                    mListener.updateHeightLevelH(string);
+                                    dialogInterface.dismiss();
+                                })
+                                .setNegativeButton("خیر", (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create().show();
+                        return true;
+                    case R.id.menu_edit:
+                        AddHeightLevelDialog dialog = AddHeightLevelDialog.newInstance(heightLevelList.get(index), index);
+                        if (listType == REQ_EDIT_HEIGHTLEVEL_H)
+                            dialog.setTargetFragment(HeightLevelsFragment.this, REQ_EDIT_HEIGHTLEVEL_H);
+                        else
+                            dialog.setTargetFragment(HeightLevelsFragment.this, REQ_EDIT_HEIGHTLEVEL_L);
+
+                        dialog.show(getFragmentManager(), "");
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            //displaying the popup
+            popup.show();
+
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -267,5 +330,9 @@ public class HeightLevelsFragment extends androidx.fragment.app.Fragment {
                 this.binding = binding;
             }
         }
+    }
+
+    public interface OnHeightLevelEventListener {
+        void onOptionsClicked(HeightLevel heightLevel, View view, int index);
     }
 }

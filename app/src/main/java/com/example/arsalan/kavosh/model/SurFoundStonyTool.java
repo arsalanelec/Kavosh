@@ -1,6 +1,5 @@
 package com.example.arsalan.kavosh.model;
 
-import com.example.arsalan.kavosh.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -35,7 +34,7 @@ public class SurFoundStonyTool extends BaseObservable {
     public void setCondition(String condition) {
         if (this.condition == null || !this.condition.equals(condition)) {
             this.condition = condition;
-            notifyPropertyChanged(BR.condition);
+            notifyChange();
         }
     }
 
@@ -47,7 +46,7 @@ public class SurFoundStonyTool extends BaseObservable {
     public void setSampleQuantity(String sampleQuantity) {
         if (this.SampleQuantity == null || !this.SampleQuantity.equals(sampleQuantity)) {
             this.SampleQuantity = sampleQuantity;
-            notifyPropertyChanged(BR.material);
+            notifyChange();
         }
     }
 
@@ -75,7 +74,7 @@ public class SurFoundStonyTool extends BaseObservable {
     public void setAge(String age) {
         if (this.age == null || !this.age.equals(age)) {
             this.age = age;
-            notifyPropertyChanged(BR.age);
+            notifyChange();
         }
     }
 

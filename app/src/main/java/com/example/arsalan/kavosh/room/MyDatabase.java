@@ -39,7 +39,7 @@ import androidx.room.TypeConverters;
         SurveyProject.class,
         Supervisor.class
 }, exportSchema = false
-        , version = 37)
+        , version = 39)
 @TypeConverters({MyTypeConverters.class})
 public abstract class MyDatabase extends RoomDatabase {
 

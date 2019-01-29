@@ -44,7 +44,7 @@
                 android:id="@+id/llUnderLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical" />
 
@@ -97,7 +97,7 @@
                 android:id="@+id/llBesideLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -153,7 +153,7 @@
                 android:id="@+id/llTopOfLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -209,7 +209,7 @@
                 android:id="@+id/llAround"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -265,7 +265,7 @@
                 android:id="@+id/llInsideLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -321,7 +321,7 @@
                 android:id="@+id/llCutedByLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -377,7 +377,7 @@
                 android:id="@+id/llCuttingLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical">
 
@@ -406,7 +406,7 @@
                 android:id="@+id/llSimilarLayer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+
                 android:background="@color/gray"
                 android:orientation="vertical" />
 

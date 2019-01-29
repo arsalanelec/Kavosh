@@ -27,6 +27,58 @@ import androidx.room.PrimaryKey;
 public class Feature implements Parcelable {
     private int structureIndex;
 
+    @NonNull
+    @PrimaryKey
+    private String id;
+    private String name;
+    private String contentJson;
+    private String structureName;
+    private String heightLevelH;
+    private String heightLevelL;
+    private String position;
+
+    private String createdAt;
+    private String updatedAt;
+    private String deletedAt;
+
+    public Feature() {
+        id = UUID.randomUUID().toString();
+    }
+
+    protected Feature(Parcel in) {
+        structureIndex = in.readInt();
+        id = in.readString();
+        name = in.readString();
+        contentJson = in.readString();
+        structureName = in.readString();
+        heightLevelH = in.readString();
+        heightLevelL = in.readString();
+        position = in.readString();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        deletedAt = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(structureIndex);
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(contentJson);
+        dest.writeString(structureName);
+        dest.writeString(heightLevelH);
+        dest.writeString(heightLevelL);
+        dest.writeString(position);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        dest.writeString(deletedAt);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<Feature> CREATOR = new Creator<Feature>() {
         @Override
         public Feature createFromParcel(Parcel in) {
@@ -38,50 +90,33 @@ public class Feature implements Parcelable {
             return new Feature[size];
         }
     };
-    @NonNull
-    @PrimaryKey
-    private String id;
-    private String name;
-    private String contentJson;
-    private String structureName;
-    protected Feature(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        contentJson = in.readString();
-        structureName = in.readString();
-        structureIndex = in.readInt();
-        createdAt = in.readString();
-        updatedAt = in.readString();
-        deletedAt = in.readString();
-    }
-
-    private String createdAt;
-    private String updatedAt;
-    private String deletedAt;
-
-    public Feature() {
-        id = UUID.randomUUID().toString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(contentJson);
-        dest.writeString(structureName);
-        dest.writeInt(structureIndex);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
-        dest.writeString(deletedAt);
-    }
 
     public int getStructureIndex() {
         return structureIndex;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getHeightLevelH() {
+        return heightLevelH;
+    }
+
+    public void setHeightLevelH(String heightLevelH) {
+        this.heightLevelH = heightLevelH;
+    }
+
+    public String getHeightLevelL() {
+        return heightLevelL;
+    }
+
+    public void setHeightLevelL(String heightLevelL) {
+        this.heightLevelL = heightLevelL;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     @NonNull

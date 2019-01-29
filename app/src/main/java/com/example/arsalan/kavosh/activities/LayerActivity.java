@@ -143,7 +143,7 @@ public class LayerActivity extends AppCompatActivity implements Injectable, HasS
     }
 
     @Override
-    public void UpdateLayerPosition(String positionJson) {
+    public void UpdateLayerFeaturePosition(String positionJson) {
         mLayer.setPosition(positionJson);
         updateLayer(mLayer);
     }

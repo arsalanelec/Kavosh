@@ -59,6 +59,7 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
     private static final String ARG_PARAM2 = "param2";
     private static final int REQ_ADD_FOUND = 100;
     private static final String ARG_PARAM3 = "ARG_PARAM3";
+    private static final String ARG_PARAM4 = "ARG_PARAM4";
     @Inject
     MyViewModelFactory factory;
     @Inject
@@ -132,7 +133,7 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         FoundViewModel viewModelFound = ViewModelProviders.of(FoundListFragment.this, factory).get(FoundViewModel.class);
-        viewModelFound.initial(mExcavationItemId, 1);
+        viewModelFound.initial(mExcavationItemId,mLayerId, 1);
         viewModelFound.getFounds().observe(FoundListFragment.this, founds -> {
             mFoundList.removeAll(mFoundList);
             mFoundList.addAll(founds);
@@ -141,7 +142,7 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
         });
 
         FoundViewModel viewModelFoundSample = ViewModelProviders.of(FoundListFragment.this, factory).get(FoundViewModel.class);
-        viewModelFoundSample.initial(mExcavationItemId, 2);
+        viewModelFoundSample.initial(mExcavationItemId,mLayerId, 2);
         viewModelFoundSample.getFounds().observe(FoundListFragment.this, founds -> {
             mFoundSample.removeAll(mFoundSample);
             mFoundSample.addAll(founds);
@@ -150,7 +151,7 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
         });
 
         FoundViewModel viewModelFoundIndex = ViewModelProviders.of(FoundListFragment.this, factory).get(FoundViewModel.class);
-        viewModelFoundIndex.initial(mExcavationItemId, 3);
+        viewModelFoundIndex.initial(mExcavationItemId,mLayerId, 3);
         viewModelFoundIndex.getFounds().observe(FoundListFragment.this, founds -> {
             mFoundIndex.removeAll(mFoundIndex);
             mFoundIndex.addAll(founds);
@@ -165,22 +166,20 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
             if (resultCode == RESULT_OK) {
                 Found found = data.getParcelableExtra(MyConst.EXTRA_MODEL);
                 mFoundDao.save(found);
-                Log.d(getClass().getSimpleName(), "onActivityResult: mExcavationItemId:" + mExcavationItemId);
+                Log.d(getClass().getSimpleName(), "onActinewInstancevityResult: mExcavationItemId:" + mExcavationItemId);
                 createUpdateFound(found);
             }
     }
 
     private void createUpdateFound(Found found) {
-
-
         Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
                 .CONNECTED).build();
         mFoundDao.save(found);
         Data inputData = new Data.Builder()
-                .putString("token", mToken.getAccessToken())
                 .putString("id", found.getId())
                 .putString("excavation_item_id", found.getExcavationItemId())
                 .putString("content_json", found.getContentJson())
+                .putString("layer_feature_id", found.getLayerFeatureId())
                 .putString("type", String.valueOf(found.getType()))
                 .build();
 
@@ -220,7 +219,6 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
      */
     public interface OnFragmentInteractionListener {
         String getNewRegistrationCode();
-
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -347,7 +345,7 @@ public class FoundListFragment extends androidx.fragment.app.Fragment implements
                 View addLayout = getLayoutInflater().inflate(R.layout.item_add_found_btn, null);
                 FloatingActionButton addButton = addLayout.findViewById(R.id.button);
                 addButton.setOnClickListener(view1 -> {
-                    AddNewFoundDialog dialog = AddNewFoundDialog.newInstance(mExcavationItemId, mLayerName, mListener.getNewRegistrationCode(), i + 1);
+                    AddNewFoundDialog dialog = AddNewFoundDialog.newInstance(mExcavationItemId,mLayerId, mLayerName, mListener.getNewRegistrationCode(), i + 1);
                     dialog.setTargetFragment(FoundListFragment.this, REQ_ADD_FOUND);
                     dialog.show(getFragmentManager(), "");
                     /*switch (i) {

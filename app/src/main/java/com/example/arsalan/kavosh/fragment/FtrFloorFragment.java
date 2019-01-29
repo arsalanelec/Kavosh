@@ -93,17 +93,19 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
     private List<AudioMemo> mAudioLst = new ArrayList<>();
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
-    private Feature mFeature;
     private FloorViewModel mFloorViewModel;
 
     public FtrFloorFragment() {
         // Required empty public constructor
     }
 
-    public static FtrFloorFragment newInstance(Feature feature) {
+    private String mFeatureId;
+    private String mFeatureContent;
+    public static FtrFloorFragment newInstance(String featureId, String contentJson) {
         FtrFloorFragment fragment = new FtrFloorFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, feature);
+        args.putString(ARG_PARAM1, featureId);
+        args.putString(ARG_PARAM2, contentJson);
         fragment.setArguments(args);
         return fragment;
     }
@@ -112,11 +114,10 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFeature = getArguments().getParcelable(ARG_PARAM1);
-            Log.d(TAG, "onCreate: mfeature ID:" + mFeature.getId());
+            mFeatureId = getArguments().getString(ARG_PARAM1);
+            mFeatureContent = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -127,9 +128,9 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
         LLCompositionAdapter = new LLCompositionAdapter(mCompositionList, binding.linearLayout);
 
         FloorFeature floor;
-        if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
+        if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            floor = gson.fromJson(mFeature.getContentJson(), FloorFeature.class);
+            floor = gson.fromJson(mFeatureContent, FloorFeature.class);
         } else {
             floor = new FloorFeature();
         }
@@ -152,7 +153,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
         AudioListViewModel audioVM = ViewModelProviders.of(FtrFloorFragment.this, factory).get(AudioListViewModel.class);
-        audioVM.initial(mFeature.getId());
+        audioVM.initial(mFeatureId);
         audioVM.getAudioMemoList().observe(FtrFloorFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
@@ -181,8 +182,8 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
                 Log.d(TAG, "onPropertyChanged: sender:mFloorViewModel floor:" + mFloorViewModel.getFloor());
                 Gson gson = new Gson();
                 try {
-                    String contentJson = gson.toJson(mFloorViewModel.getFloor());
-                    mFeature.setContentJson(contentJson);
+                    mFeatureContent = gson.toJson(mFloorViewModel.getFloor());
+
                 } catch (Exception e) {
 
                 }
@@ -196,7 +197,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
                     e.printStackTrace();
                 }
 
-                mListener.onUpdateFeature(mFeature);
+                mListener.onUpdateFeature(mFeatureContent);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
@@ -271,7 +272,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
 
     private void setupPhotoRecycler() {
         PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrFloorFragment.this, factory).get(PhotoListViewModel.class);
-        photoListViewModel.initial(mFeature.getId());
+        photoListViewModel.initial(mFeatureId);
         photoListViewModel.getPhotoList().observe(FtrFloorFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
@@ -298,7 +299,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
-                audio.setAudioable_id(mFeature.getId());
+                audio.setAudioable_id(mFeatureId);
                 audio.setAudioable_type("App\\FEATURE");
                 audio.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 audio.setLocalPath(data.getStringExtra(MyConst.EXTRA_FILE_PATH));
@@ -310,7 +311,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
 
                 Photo photo = new Photo();
                 photo.setLocalPath(mPhotoLocalPath);
-                photo.setPhotoableId(mFeature.getId());
+                photo.setPhotoableId(mFeatureId);
                 photo.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 photo.setPhotoableType("App\\FEATURE");
                 mListener.onUploadPhoto(photo);
@@ -348,7 +349,7 @@ public class FtrFloorFragment extends androidx.fragment.app.Fragment implements 
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(Feature feature);
+        void onUpdateFeature(String featureContent);
 
         void onUploadAudio(AudioMemo audio);
 

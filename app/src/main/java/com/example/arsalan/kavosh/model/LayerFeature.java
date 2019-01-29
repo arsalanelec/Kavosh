@@ -69,6 +69,7 @@ public class LayerFeature {
     }
 
     public String getName() {
+        if(name==null || name.isEmpty()) return "نامشخص";
         return name;
     }
 

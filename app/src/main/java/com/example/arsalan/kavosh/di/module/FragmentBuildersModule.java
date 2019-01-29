@@ -28,6 +28,7 @@ import com.example.arsalan.kavosh.fragment.FtrDitchFragment;
 import com.example.arsalan.kavosh.fragment.FtrFireplaceFragment;
 import com.example.arsalan.kavosh.fragment.FtrFloorFragment;
 import com.example.arsalan.kavosh.fragment.FtrPitFragment;
+import com.example.arsalan.kavosh.fragment.FtrStairsFragment;
 import com.example.arsalan.kavosh.fragment.FtrStoveFragment;
 import com.example.arsalan.kavosh.fragment.FtrWallFragment;
 import com.example.arsalan.kavosh.fragment.LayerFeatureListFragment;
@@ -116,5 +117,8 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract FtrDitchFragment addFtrDitchFragment();
+
+    @ContributesAndroidInjector
+    abstract FtrStairsFragment addFtrStairsFragment ();
 
 }

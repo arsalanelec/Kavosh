@@ -297,6 +297,7 @@ public class FoundActivity extends AppCompatActivity implements Injectable, HasS
                 .putString("excavation_item_id", found.getExcavationItemId())
                 .putString("content_json", found.getContentJson())
                 .putString("type", String.valueOf(found.getType()))
+                .putString("layer_feature_id", found.getLayerFeatureId())
                 .build();
         OneTimeWorkRequest uploadFound = new OneTimeWorkRequest.Builder(FoundUploadWorker.class)
                 .setConstraints(constraints)

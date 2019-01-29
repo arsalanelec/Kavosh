@@ -92,7 +92,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
     @Inject
     MyViewModelFactory factory;
     private String mLayerName;
-    private String mFeatureId;
+
     private List<Composition> mCompositionList;
     private LLCompositionAdapter mLlCompositionAdapter;
     private PhotoAdapter mGalleryAdapter;
@@ -101,17 +101,18 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
     private List<AudioMemo> mAudioLst = new ArrayList<>();
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
-    private Feature mFeature;
     private WallViewModel mWallViewModel;
 
     public FtrWallFragment() {
         // Required empty public constructor
     }
-
-    public static FtrWallFragment newInstance(Feature feature) {
+    private String mFeatureId;
+    private String mFeatureContent;
+    public static FtrWallFragment newInstance(String featureId, String contentJson) {
         FtrWallFragment fragment = new FtrWallFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, feature);
+        args.putString(ARG_PARAM1, featureId);
+        args.putString(ARG_PARAM2, contentJson);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,8 +121,8 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFeature = getArguments().getParcelable(ARG_PARAM1);
-            Log.d(TAG, "onCreate: mfeature ID:" + mFeature.getId());
+            mFeatureId = getArguments().getString(ARG_PARAM1);
+            mFeatureContent = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -135,9 +136,9 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
         mLlCompositionAdapter = new LLCompositionAdapter(mCompositionList, binding.linearLayout);
 
         WallFeature wall;
-        if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
+        if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            wall = gson.fromJson(mFeature.getContentJson(), WallFeature.class);
+            wall = gson.fromJson(mFeatureContent, WallFeature.class);
         } else {
             wall = new WallFeature();
         }
@@ -160,7 +161,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
         AudioListViewModel audioVM = ViewModelProviders.of(FtrWallFragment.this, factory).get(AudioListViewModel.class);
-        audioVM.initial(mFeature.getId());
+        audioVM.initial(mFeatureId);
         audioVM.getAudioMemoList().observe(FtrWallFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
@@ -186,13 +187,13 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
                 try {
                     Gson gson = new Gson();
                     String contentJson = gson.toJson(mWallViewModel.getWall());
-                    mFeature.setContentJson(contentJson);
+
                     List<Composition> list = gson.fromJson(mWallViewModel.getWallComposition(), new TypeToken<List<Composition>>() {
                     }.getType());
                     mCompositionList.removeAll(mCompositionList);
                     mCompositionList.addAll(list);
                     mLlCompositionAdapter.notifyDataSetChanged();
-                    mListener.onUpdateFeature(mFeature);
+                    mListener.onUpdateFeature(contentJson);
 
                 } catch (Exception e) {
 
@@ -271,7 +272,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
 
     private void setupPhotoRecycler() {
         PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrWallFragment.this, factory).get(PhotoListViewModel.class);
-        photoListViewModel.initial(mFeature.getId());
+        photoListViewModel.initial(mFeatureId);
         photoListViewModel.getPhotoList().observe(FtrWallFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
@@ -298,7 +299,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
-                audio.setAudioable_id(mFeature.getId());
+                audio.setAudioable_id(mFeatureId);
                 audio.setAudioable_type("App\\FEATURE");
                 audio.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 audio.setLocalPath(data.getStringExtra(MyConst.EXTRA_FILE_PATH));
@@ -310,7 +311,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
 
                 Photo photo = new Photo();
                 photo.setLocalPath(mPhotoLocalPath);
-                photo.setPhotoableId(mFeature.getId());
+                photo.setPhotoableId(mFeatureId);
                 photo.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 photo.setPhotoableType("App\\FEATURE");
                 mListener.onUploadPhoto(photo);
@@ -358,7 +359,7 @@ public class FtrWallFragment extends androidx.fragment.app.Fragment implements I
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(Feature feature);
+        void onUpdateFeature(String  contentJson);
 
         void onUploadAudio(AudioMemo audio);
 

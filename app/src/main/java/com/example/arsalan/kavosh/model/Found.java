@@ -29,6 +29,7 @@ public class Found implements Parcelable {
     @PrimaryKey
     private String id;
     private String excavationItemId;
+    private String layerFeatureId;
     private String contentJson;
     private int type;
     private String createdAt;
@@ -80,6 +81,14 @@ public class Found implements Parcelable {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public String getLayerFeatureId() {
+        return layerFeatureId;
+    }
+
+    public void setLayerFeatureId(String layerFeatureId) {
+        this.layerFeatureId = layerFeatureId;
     }
 
     @NonNull

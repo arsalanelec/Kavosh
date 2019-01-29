@@ -21,7 +21,7 @@ public class SurHillExtraDetail extends BaseObservable {
     }
 
     public void setShape(String shape) {
-        if (this.shape == null || this.shape != shape) {
+        if (this.shape == null || !this.shape.equals(shape)) {
             this.shape = shape;
             notifyChange();
         }

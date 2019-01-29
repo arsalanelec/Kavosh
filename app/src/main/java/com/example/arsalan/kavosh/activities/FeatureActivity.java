@@ -15,13 +15,18 @@ import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.ActivityFeatureBinding;
 import com.example.arsalan.kavosh.di.Injectable;
 import com.example.arsalan.kavosh.fragment.BlankFragment;
+import com.example.arsalan.kavosh.fragment.FeaturePositionFragment;
+import com.example.arsalan.kavosh.fragment.FoundListFragment;
 import com.example.arsalan.kavosh.fragment.FtrDebrisFragment;
 import com.example.arsalan.kavosh.fragment.FtrDitchFragment;
 import com.example.arsalan.kavosh.fragment.FtrFireplaceFragment;
 import com.example.arsalan.kavosh.fragment.FtrFloorFragment;
 import com.example.arsalan.kavosh.fragment.FtrPitFragment;
+import com.example.arsalan.kavosh.fragment.FtrStairsFragment;
 import com.example.arsalan.kavosh.fragment.FtrStoveFragment;
 import com.example.arsalan.kavosh.fragment.FtrWallFragment;
+import com.example.arsalan.kavosh.fragment.HeightLevelsFragment;
+import com.example.arsalan.kavosh.fragment.LayerPositionFragment;
 import com.example.arsalan.kavosh.model.AudioMemo;
 import com.example.arsalan.kavosh.model.Feature;
 import com.example.arsalan.kavosh.model.MyConst;
@@ -43,6 +48,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.work.Constraints;
@@ -59,6 +66,7 @@ import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE17;
 import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE18;
 import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE2;
 import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE3;
+import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE4;
 import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE5;
 import static com.example.arsalan.kavosh.model.Feature.MyEnum.FEATURE6;
 import static com.example.arsalan.kavosh.utils.AudioUpload.uploadAudio;
@@ -71,7 +79,12 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
         , FtrFireplaceFragment.OnFragmentInteractionListener
         , FtrStoveFragment.OnFragmentInteractionListener
         , FtrPitFragment.OnFragmentInteractionListener
-        , FtrDitchFragment.OnFragmentInteractionListener {
+        , FtrDitchFragment.OnFragmentInteractionListener
+        , FtrStairsFragment.OnFragmentInteractionListener
+        , FeaturePositionFragment.OnFragmentInteractionListener
+        , HeightLevelsFragment.OnFragmentInteractionListener
+        , LayerPositionFragment.OnFragmentInteractionListener
+        , FoundListFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "FeatureActivity";
 
@@ -101,9 +114,6 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
     private String mFeatureId;
     private Feature mFeature;
 
-    public FeatureActivity() {
-        mContext = this;
-    }
 
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
@@ -127,31 +137,34 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
             public void onChanged(@Nullable Feature feature) {
                 if (feature != null) {
                     mFeature = feature;
-                    Fragment fragment = new BlankFragment();
+                    /*Fragment fragment = new BlankFragment();
                     if (mFeature.getStructureIndex() == FEATURE1.ordinal() || mFeature.getStructureIndex() == FEATURE2.ordinal()) {
-                        fragment = FtrWallFragment.newInstance(mFeature);
+                        fragment = FtrWallFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
 
                     } else if (mFeature.getStructureIndex() == FEATURE3.ordinal()) {
-                        fragment = FtrFloorFragment.newInstance(mFeature);
+                        fragment = FtrFloorFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
 
 
                     } else if (mFeature.getStructureIndex() == FEATURE6.ordinal()) {//آتشدان
-                        fragment = FtrFireplaceFragment.newInstance(mFeature);
+                        fragment = FtrFireplaceFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
 
                     } else if (mFeature.getStructureIndex() == FEATURE13.ordinal()) {//آوار
-                        fragment = FtrDebrisFragment.newInstance(mFeature);
+                        fragment = FtrDebrisFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
 
                     } else if (mFeature.getStructureIndex() == FEATURE5.ordinal()) {// اجاق
-                        fragment = FtrStoveFragment.newInstance(mFeature);
+                        fragment = FtrStoveFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
                     } else if (mFeature.getStructureIndex() == FEATURE17.ordinal()) {// چاله
-                        fragment = FtrPitFragment.newInstance(mFeature);
+                        fragment = FtrPitFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
                     } else if (mFeature.getStructureIndex() == FEATURE18.ordinal()) { //راه آب
-                        fragment = FtrDitchFragment.newInstance(mFeature);
+                        fragment = FtrDitchFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
                     }
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.content, fragment)
-                            .commit();
+                            .commit();*/
+                    binding.viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), mFeature));
+                    binding.viewPager.setOffscreenPageLimit(0);
+                    binding.tabLayout.setupWithViewPager(binding.viewPager);
                 }
                 viewModel.getFeature().
 
@@ -160,33 +173,93 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
         });
     }
 
+    @Override
+    public void onUpdatePosition(String positionJson) {
+        mFeature.setPosition(positionJson);
+        storeFeature(mFeature);
+    }
 
+    @Override
     public String getNewRegistrationCode() {
         return increaseCode(mRegistrationCoding, mFoundDao.getNumberOfRows(mExcavationItemId));
     }
 
-/*
-    private void updateFeature(Feature feature) {
-        mFeatureDao.save(feature);
-        Data inputDataFeature = new Data.Builder()
-                .putString("token", mToken.getAccessToken())
-                .putString("id", feature.getId())
-                .putString("name", feature.getName())
-                .putString("height_level_h", feature.getHeightLevelH())
-                .putString("height_level_l", feature.getHeightLevelL())
-                .putString("position", feature.getPosition())
-                .build();
-        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType
-                .CONNECTED).build();
-        OneTimeWorkRequest FeatureUploadWork = new OneTimeWorkRequest.Builder(FeatureUploadWorker.class)
-                .setConstraints(constraints).setInputData(inputDataFeature).build();
-        WorkManager.getInstance().enqueue(FeatureUploadWork);
-        WorkManager.getInstance().getWorkInfoByIdLiveData(FeatureUploadWork.getId())
-                .observe(FeatureActivity.this, workStatus ->
-                        Log.d(getClass().getSimpleName(), "updateFeature: status:" + workStatus)
-                );
+
+    private class PagerAdapter extends FragmentPagerAdapter {
+        String[] titles = {"ابعاد", "موقعیت فضایی", "سطوح ارتفاعی", "موقعیت فیچر", "یافته"};
+
+        Feature feature;
+
+        public PagerAdapter(FragmentManager fm, Feature feature) {
+            super(fm);
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            switch (i) {
+                case 0:
+                    Fragment fragment = new BlankFragment();
+                    if (mFeature.getStructureIndex() == FEATURE1.ordinal() || mFeature.getStructureIndex() == FEATURE2.ordinal()) {
+                        fragment = FtrWallFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+
+                    } else if (mFeature.getStructureIndex() == FEATURE3.ordinal()) {
+                        fragment = FtrFloorFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+
+
+                    } else if (mFeature.getStructureIndex() == FEATURE6.ordinal()) {//آتشدان
+                        fragment = FtrFireplaceFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+
+                    } else if (mFeature.getStructureIndex() == FEATURE13.ordinal()) {//آوار
+                        fragment = FtrDebrisFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+
+                    } else if (mFeature.getStructureIndex() == FEATURE5.ordinal()) {// اجاق
+                        fragment = FtrStoveFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+                    } else if (mFeature.getStructureIndex() == FEATURE17.ordinal()) {// چاله
+                        fragment = FtrPitFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+                    } else if (mFeature.getStructureIndex() == FEATURE18.ordinal()) { //راه آب
+                        fragment = FtrDitchFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+                    } else if (mFeature.getStructureIndex() == FEATURE4.ordinal()) { //پله
+                        fragment = FtrStairsFragment.newInstance(mFeature.getId(), mFeature.getContentJson());
+                    }
+                    return fragment;
+
+                case 1:
+                    return FeaturePositionFragment.newInstance(mFeature.getPosition());
+                case 2:
+                    return HeightLevelsFragment.newInstance(mFeature.getHeightLevelH(), mFeature.getHeightLevelL());
+                case 3:
+                    return LayerPositionFragment.newInstance(mFeature.getPosition(), mExcavationItemId);
+                case 4:
+                    return FoundListFragment.newInstance(mFeature.getName(), mFeatureId, mExcavationItemId);
+
+              /*  return ContextureFragment.newInstance(mLayerName, mLayerId);
+            } else if (i == 1) {
+                //  return HeightLevelsFragment.newInstance();
+                return HeightLevelsFragment.newInstance(mLayer.getHeightLevelH(), mLayer.getHeightLevelL());
+            } else if (i == 2) {
+                return LayerPositionFragment.newInstance(mLayer.getPosition(), mExcavationItemId);
+            } else if (i == 3) {
+                return FoundListFragment.newInstance(mLayerName, mLayerId, mExcavationItemId);
+
+            } else
+                return ContextureFragment.newInstance(mLayerName, mLayerId);*/
+            }
+            return new BlankFragment();
+
+        }
+
+        @Override
+        public int getCount() {
+            return titles.length;
+        }
     }
-*/
+
 
     private String increaseCode(String codingStart, int count) {
 
@@ -215,6 +288,25 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
             return sample;
         }
         return null;
+    }
+
+    @Override
+    public void updateHeightLevelH(String jsonString) {
+        mFeature.setHeightLevelH(jsonString);
+        Log.d(getClass().getSimpleName(), "updateHeightLevelH: " + jsonString);
+        storeFeature(mFeature);
+    }
+
+    @Override
+    public void updateHeightLevelL(String jsonString) {
+        mFeature.setHeightLevelL(jsonString);
+        storeFeature(mFeature);
+    }
+
+    @Override
+    public void UpdateLayerFeaturePosition(String positionJson) {
+        mFeature.setPosition(positionJson);
+        storeFeature(mFeature);
     }
 
     @Override
@@ -272,8 +364,10 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
     }
 
     @Override
-    public void onUpdateFeature(Feature feature) {
-        StoreFeature(feature);
+    public void onUpdateFeature(String featureContentJson) {
+
+        mFeature.setContentJson(featureContentJson);
+        storeFeature(mFeature);
         Log.d(TAG, "onUpdateFeature: ");
     }
 
@@ -291,7 +385,7 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
 
     }
 
-    private void StoreFeature(Feature feature) {
+    private void storeFeature(Feature feature) {
 
         mFeatureDao.save(feature);
 
@@ -299,13 +393,14 @@ public class FeatureActivity extends AppCompatActivity implements Injectable, Ha
                 .CONNECTED).build();
 
         Data inputDataLayer = new Data.Builder()
-                /*'id','name','structure','content_json','structure_index'*/
-
                 .putString("id", feature.getId())
                 .putString("name", feature.getName())
                 .putString("structure", feature.getStructureName())
                 .putString("structure_index", String.valueOf(feature.getStructureIndex()))
                 .putString("content_json", feature.getContentJson())
+                .putString("height_level_h", feature.getHeightLevelH())
+                .putString("height_level_l", feature.getHeightLevelL())
+                .putString("position", feature.getPosition())
                 .build();
 
         OneTimeWorkRequest featureUploadWork = new OneTimeWorkRequest.Builder(FeatureCreateUpdateWorker.class)

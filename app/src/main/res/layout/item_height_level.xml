@@ -8,11 +8,20 @@
             name="heightLevel"
             type="com.example.arsalan.kavosh.model.HeightLevel" />
 
+        <variable
+            name="onClick"
+            type="com.example.arsalan.kavosh.fragment.HeightLevelsFragment.OnHeightLevelEventListener" />
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="index"
+            type="Integer" />
         <import type="java.lang.Double" />
 
         <import type="java.lang.Integer" />
-
-
     </data>
 
     <LinearLayout
@@ -50,6 +59,22 @@
             android:layout_weight="2"
             android:gravity="center"
             app:referenceName="@{heightLevel.reference}" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray" />
+        <TextView
+            android:id="@+id/textViewOptions"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:onClick="@{()->onClick.onOptionsClicked(heightLevel,view,index)}"
+            android:text="@string/dot_3"
+            android:textAppearance="?android:textAppearanceLarge" />
     </LinearLayout>
 
 </layout>

@@ -1,22 +1,21 @@
 package com.example.arsalan.kavosh.model;
 
-import com.example.arsalan.kavosh.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class SurFoundArchitecture extends BaseObservable {
-    String id;
-    String condition;
-    String material;
-    boolean[] coordinationDispersion = new boolean[10];
-    boolean[] coordinationDensity = new boolean[10];
-    String age;
-    String usage;
-    int direction1;
-    int direction2;
-    String lenght1;
-    String lenght2;
+   private String id;
+   private String condition;
+   private String material;
+   private boolean[] coordinationDispersion = new boolean[10];
+   private boolean[] coordinationDensity = new boolean[10];
+   private String age;
+   private String usage;
+   private int direction1;
+   private int direction2;
+   private String length1;
+   private String lenght2;
 
     public SurFoundArchitecture() {
     }
@@ -37,7 +36,7 @@ public class SurFoundArchitecture extends BaseObservable {
     public void setCondition(String condition) {
         if (this.condition == null || !this.condition.equals(condition)) {
             this.condition = condition;
-            notifyPropertyChanged(BR.condition);
+            notifyChange();
         }
     }
 
@@ -49,7 +48,7 @@ public class SurFoundArchitecture extends BaseObservable {
     public void setMaterial(String material) {
         if (this.material == null || !this.material.equals(material)) {
             this.material = material;
-            notifyPropertyChanged(BR.material);
+            notifyChange();
         }
     }
 
@@ -77,7 +76,7 @@ public class SurFoundArchitecture extends BaseObservable {
     public void setAge(String age) {
         if (this.age == null || !this.age.equals(age)) {
             this.age = age;
-            notifyPropertyChanged(BR.age);
+            notifyChange();
         }
     }
 
@@ -118,13 +117,13 @@ public class SurFoundArchitecture extends BaseObservable {
     }
 
     @Bindable
-    public String getLenght1() {
-        return lenght1;
+    public String getLength1() {
+        return length1;
     }
 
-    public void setLenght1(String lenght1) {
-        if (this.lenght1 == null || !this.lenght1.equals(lenght1)) {
-            this.lenght1 = lenght1;
+    public void setLength1(String length1) {
+        if (this.length1 == null || !this.length1.equals(length1)) {
+            this.length1 = length1;
             notifyChange();
         }
     }

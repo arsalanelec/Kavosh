@@ -26,7 +26,7 @@ public class LayerFeatureRepository {
     private final LayerFeatureDao layerFeatureDao;
     private final UserDao userDao;
     private final Executor executor;
-    private final String TAG = "ExcavationItemListRepository";
+    private static final String TAG = "LayerFeatureRepository";
     @Inject
     Retrofit mRetrofit;
 
@@ -62,10 +62,8 @@ public class LayerFeatureRepository {
                 } else {
                     Log.d("LayerFeatureRepository", "run: response.error");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
+            } catch (Throwable t){
+                Log.d(TAG, "refreshList: error:"+t.getLocalizedMessage());
             }
         });
     }

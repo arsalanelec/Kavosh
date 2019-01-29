@@ -32,6 +32,7 @@ public class AddNewFoundDialog extends DialogFragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
     private static final String ARG_PARAM4 = "param4";
+    private static final String ARG_PARAM5 = "param5";
 
     // TODO: Rename and change types of parameters
     private String mExcavationItemId;
@@ -39,19 +40,21 @@ public class AddNewFoundDialog extends DialogFragment {
 
     private String mRegistrationNum;
     private int mType;
+    private String mLayerId;
 
     public AddNewFoundDialog() {
         // Required empty public constructor
     }
 
 
-    public static AddNewFoundDialog newInstance(String excavationItemId, String layerName, String registrationNum, int type) {
+    public static AddNewFoundDialog newInstance(String excavationItemId,String layerId, String layerName, String registrationNum, int type) {
         AddNewFoundDialog fragment = new AddNewFoundDialog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, excavationItemId);
         args.putString(ARG_PARAM2, layerName);
         args.putString(ARG_PARAM3, registrationNum);
         args.putInt(ARG_PARAM4, type);
+        args.putString(ARG_PARAM5, layerId);
 
         fragment.setArguments(args);
         return fragment;
@@ -65,6 +68,7 @@ public class AddNewFoundDialog extends DialogFragment {
             mLayerName = getArguments().getString(ARG_PARAM2);
             mRegistrationNum = getArguments().getString(ARG_PARAM3);
             mType = getArguments().getInt(ARG_PARAM4);
+            mLayerId = getArguments().getString(ARG_PARAM5);
         }
     }
 
@@ -89,6 +93,7 @@ public class AddNewFoundDialog extends DialogFragment {
             Gson gson = new Gson();
             String foundJson = gson.toJson(foundDetail);
             Found found = new Found();
+            found.setLayerFeatureId(mLayerId);
             found.setContentJson(foundJson);
             found.setType(mType);
             found.setExcavationItemId(mExcavationItemId);

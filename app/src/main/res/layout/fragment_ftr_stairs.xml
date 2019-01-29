@@ -7,8 +7,8 @@
     <data>
 
         <variable
-            name="ditch"
-            type="com.example.arsalan.kavosh.model.DitchFeature" />
+            name="stairs"
+            type="com.example.arsalan.kavosh.model.StairsFeature" />
     </data>
 
     <ScrollView
@@ -31,102 +31,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="محل قرارگیری راه آب:"
+                    android:text="نوع پله:"
                     android:textColor="@color/colorPrimaryDark" />
 
                 <MultiAutoCompleteTextView
-                    android:id="@+id/etPlace"
+                    android:id="@+id/etType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={ditch.place}" />
+                    android:text="@={stairs.type}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="ساختار راه آب:"
+                    android:text="ساختار پله:"
                     android:textColor="@color/colorPrimaryDark" />
 
                 <MultiAutoCompleteTextView
                     android:id="@+id/etStructure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={ditch.structure}" />
+                    android:text="@={stairs.structure}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="شکل راه آب:"
+                    android:text="تعداد پله:"
                     android:textColor="@color/colorPrimaryDark" />
 
                 <MultiAutoCompleteTextView
-                    android:id="@+id/etShapes"
+                    android:id="@+id/etQuantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={ditch.shape}" />
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="@={stairs.quantity}"
+                     />
 
                 <LinearLayout
+                    android:id="@+id/llStairs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:inputType="numberDecimal"
-                        android:text="@={ditch.slope}" />
-
-                    <TextView
-                        style="@style/text_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" درجه" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:orientation="vertical"/>
+                <Button
+                    android:id="@+id/btnAddStairDetail"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" از سمت " />
-
-                    <Spinner
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:entries="@array/array_coordination"
-                        android:inputType="numberDecimal"
-                        android:selectedItemPosition="@={ditch.slopeFromCord}" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/text_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" به سمت " />
-
-                    <Spinner
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:entries="@array/array_coordination"
-                        android:inputType="numberDecimal"
-                        android:selectedItemPosition="@={ditch.slopeToCord}" />
-
-                </LinearLayout>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="+ پله "
+                    android:layout_gravity="end" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -141,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:text="@={ditch.description}" />
+                    android:text="@={stairs.description}" />
 
                 <TextView
                     android:layout_width="match_parent"

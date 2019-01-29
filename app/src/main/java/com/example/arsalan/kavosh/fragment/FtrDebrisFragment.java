@@ -76,31 +76,31 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int REQ_ADD_COMPOSITION = 1;
     private static final int REQ_RECORD_AUDIO = 2;
     private static final int REQ_ADD_SUBTITLE_PHOTO = 3;
-    private static final int REQ_EDIT_COMPOSITION = 4;
-    private static final int REQ_REMOVE_COMPOSITION = 5;
+
     @Inject
     MyViewModelFactory factory;
-    private String mLayerName;
-    private String mFeatureId;
+
     private PhotoAdapter mGalleryAdapter;
     private ArrayList<Photo> mPhotoList = new ArrayList<Photo>();
     private LLAudioAdapter mAudioAdapter;
     private List<AudioMemo> mAudioLst = new ArrayList<>();
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
-    private Feature mFeature;
+
 
     public FtrDebrisFragment() {
         // Required empty public constructor
     }
 
-    public static FtrDebrisFragment newInstance(Feature feature) {
+    private String mFeatureId;
+    private String mFeatureContent;
+    public static FtrDebrisFragment newInstance(String featureId, String contentJson) {
         FtrDebrisFragment fragment = new FtrDebrisFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, feature);
+        args.putString(ARG_PARAM1, featureId);
+        args.putString(ARG_PARAM2, contentJson);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,11 +109,10 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFeature = getArguments().getParcelable(ARG_PARAM1);
-            Log.d(TAG, "onCreate: mfeature ID:" + mFeature.getId());
+            mFeatureId = getArguments().getString(ARG_PARAM1);
+            mFeatureContent = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,9 +120,9 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
         FragmentFtrDebrisBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_debris, container, false);
 
         DebrisFeature debrisFeature;
-        if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
+        if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            debrisFeature = gson.fromJson(mFeature.getContentJson(), DebrisFeature.class);
+            debrisFeature = gson.fromJson(mFeatureContent, DebrisFeature.class);
         } else {
             debrisFeature = new DebrisFeature();
         }
@@ -134,7 +133,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
         AudioListViewModel audioVM = ViewModelProviders.of(FtrDebrisFragment.this, factory).get(AudioListViewModel.class);
-        audioVM.initial(mFeature.getId());
+        audioVM.initial(mFeatureId);
         audioVM.getAudioMemoList().observe(FtrDebrisFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
@@ -170,8 +169,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Gson gson = new Gson();
                 String contentJson = gson.toJson(debrisFeature);
-                mFeature.setContentJson(contentJson);
-                mListener.onUpdateFeature(mFeature);
+                mListener.onUpdateFeature(mFeatureContent);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
@@ -240,7 +238,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
 
     private void setupPhotoRecycler() {
         PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrDebrisFragment.this, factory).get(PhotoListViewModel.class);
-        photoListViewModel.initial(mFeature.getId());
+        photoListViewModel.initial(mFeatureId);
         photoListViewModel.getPhotoList().observe(FtrDebrisFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
@@ -257,7 +255,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
-                audio.setAudioable_id(mFeature.getId());
+                audio.setAudioable_id(mFeatureId);
                 audio.setAudioable_type("App\\FEATURE");
                 audio.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 audio.setLocalPath(data.getStringExtra(MyConst.EXTRA_FILE_PATH));
@@ -269,7 +267,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
 
                 Photo photo = new Photo();
                 photo.setLocalPath(mPhotoLocalPath);
-                photo.setPhotoableId(mFeature.getId());
+                photo.setPhotoableId(mFeatureId);
                 photo.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 photo.setPhotoableType("App\\FEATURE");
                 mListener.onUploadPhoto(photo);
@@ -308,7 +306,7 @@ public class FtrDebrisFragment extends androidx.fragment.app.Fragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(Feature feature);
+        void onUpdateFeature(String  featureContentJson);
 
         void onUploadAudio(AudioMemo audio);
 

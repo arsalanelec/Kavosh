@@ -25,14 +25,14 @@ public class Layer implements Parcelable {
     };
     @NonNull
     @PrimaryKey
-    String id;
-    String name;
-    String heightLevelH;
-    String heightLevelL;
-    String position;
-    String createdAt;
-    String updatedAt;
-    String deletedAt;
+   private String id;
+   private String name;
+   private String heightLevelH;
+   private String heightLevelL;
+   private String position;
+   private String createdAt;
+   private String updatedAt;
+   private String deletedAt;
 
     public Layer() {
         id = UUID.randomUUID().toString();

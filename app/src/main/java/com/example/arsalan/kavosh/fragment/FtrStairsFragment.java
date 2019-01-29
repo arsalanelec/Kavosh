@@ -1,5 +1,6 @@
 package com.example.arsalan.kavosh.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +17,27 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.activities.GalleryActivity;
-import com.example.arsalan.kavosh.databinding.FragmentFtrPitBinding;
+import com.example.arsalan.kavosh.databinding.FragmentFtrStairsBinding;
 import com.example.arsalan.kavosh.databinding.ItemAudioListBinding;
 import com.example.arsalan.kavosh.databinding.ItemGalleryBinding;
+import com.example.arsalan.kavosh.databinding.ItemStairBinding;
 import com.example.arsalan.kavosh.di.Injectable;
+import com.example.arsalan.kavosh.dialog.AddEditStairDetailDialog;
 import com.example.arsalan.kavosh.dialog.PhotoReviewDialog;
 import com.example.arsalan.kavosh.dialog.VoiceRecordDialog;
 import com.example.arsalan.kavosh.interfaces.AudioMemoEventListener;
 import com.example.arsalan.kavosh.interfaces.PhotoItemClickListener;
 import com.example.arsalan.kavosh.model.AudioMemo;
+import com.example.arsalan.kavosh.model.FeatureStairDetail;
 import com.example.arsalan.kavosh.model.FileDownloaded;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.example.arsalan.kavosh.model.Photo;
-import com.example.arsalan.kavosh.model.PitFeature;
+import com.example.arsalan.kavosh.model.StairsFeature;
 import com.example.arsalan.kavosh.viewModel.AudioListViewModel;
 import com.example.arsalan.kavosh.viewModel.FileViewModel;
 import com.example.arsalan.kavosh.viewModel.PhotoListViewModel;
@@ -52,6 +58,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
@@ -64,22 +71,22 @@ import static com.example.arsalan.kavosh.model.MyConst.BASE_URL;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FtrPitFragment.OnFragmentInteractionListener} interface
+ * {@link FtrStairsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FtrPitFragment#newInstance} factory method to
+ * Use the {@link FtrStairsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FtrPitFragment extends androidx.fragment.app.Fragment implements Injectable {
+//راه آب
+public class FtrStairsFragment extends androidx.fragment.app.Fragment implements Injectable {
     private static final String TAG = "FtrWallFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final int REQ_ADD_COMPOSITION = 1;
     private static final int REQ_RECORD_AUDIO = 2;
     private static final int REQ_ADD_SUBTITLE_PHOTO = 3;
-    private static final int REQ_EDIT_COMPOSITION = 4;
-    private static final int REQ_REMOVE_COMPOSITION = 5;
+    private static final int REQ_EDIT_STAIR_DETAIL = 1;
+    private static final int REQ_ADD_STAIR_DETAIL = 4;
     @Inject
     MyViewModelFactory factory;
     private String mLayerName;
@@ -90,15 +97,19 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
 
-    public FtrPitFragment() {
+    private List<FeatureStairDetail> mStairDetails;
+    private StairsLLAdapter mAdapterStairDetail;
+    private StairsFeature mStair;
+
+    public FtrStairsFragment() {
         // Required empty public constructor
     }
 
     private String mFeatureId;
     private String mFeatureContent;
 
-    public static FtrPitFragment newInstance(String featureId, String contentJson) {
-        FtrPitFragment fragment = new FtrPitFragment();
+    public static FtrStairsFragment newInstance(String featureId, String contentJson) {
+        FtrStairsFragment fragment = new FtrStairsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, featureId);
         args.putString(ARG_PARAM2, contentJson);
@@ -119,53 +130,72 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentFtrPitBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_pit, container, false);
+        FragmentFtrStairsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_stairs, container, false);
 
-        PitFeature pit;
         if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            pit = gson.fromJson(mFeatureContent, PitFeature.class);
+            mStair = gson.fromJson(mFeatureContent, StairsFeature.class);
         } else {
-            pit = new PitFeature();
+            mStair = new StairsFeature();
         }
+        mStairDetails = mStair.getStairDimensions();
+        if (mStairDetails == null) {
+            mStairDetails = new ArrayList<>();
+        }
+        mAdapterStairDetail = new StairsLLAdapter(mStairDetails, binding.llStairs);
+
         binding.rvGallery.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mGalleryAdapter = new PhotoAdapter(mPhotoList);
         binding.rvGallery.setAdapter(mGalleryAdapter);
+        binding.btnAddStairDetail.setOnClickListener(b -> {
+            AddEditStairDetailDialog detailDialog=new AddEditStairDetailDialog();
+            detailDialog.setTargetFragment(FtrStairsFragment.this,REQ_ADD_STAIR_DETAIL);
+            detailDialog.show(getFragmentManager(),"");
+        });
 
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
-        AudioListViewModel audioVM = ViewModelProviders.of(FtrPitFragment.this, factory).get(AudioListViewModel.class);
+        AudioListViewModel audioVM = ViewModelProviders.of(FtrStairsFragment.this, factory).get(AudioListViewModel.class);
         audioVM.initial(mFeatureId);
-        audioVM.getAudioMemoList().observe(FtrPitFragment.this, audioMemoList -> {
+        audioVM.getAudioMemoList().observe(FtrStairsFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
             mAudioAdapter.notifyDataSetChanged();
         });
         setupPhotoRecycler();
 
-        binding.setPit(pit);
+        binding.setStairs(mStair);
 
 
+        ArrayAdapter<String> textAdapter1 = new ArrayAdapter<String>(
+                getContext(),
+                android.R.layout.simple_dropdown_item_1line, StairsFeature.STRUCTURE_HINTS);
+        binding.etStructure.setAdapter(textAdapter1);
+        binding.etStructure.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        binding.etStructure.setOnFocusChangeListener((view, b) -> {
+            if (b) binding.etStructure.showDropDown();
+        });
         ArrayAdapter<String> textAdapter2 = new ArrayAdapter<String>(
                 getContext(),
-                android.R.layout.simple_dropdown_item_1line, PitFeature.contentHints);
-        binding.etContents.setAdapter(textAdapter2);
-        binding.etContents.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-        binding.etContents.setOnFocusChangeListener((view, b) -> {
-            if (b) binding.etContents.showDropDown();
+                android.R.layout.simple_dropdown_item_1line, StairsFeature.TYPE_HINTS);
+        binding.etType.setAdapter(textAdapter2);
+        binding.etType.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        binding.etType.setOnFocusChangeListener((view, b) -> {
+            if (b) binding.etType.showDropDown();
         });
 
-        pit.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+
+        mStair.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Gson gson = new Gson();
-                String contentJson = gson.toJson(pit);
+                String contentJson = gson.toJson(mStair);
                 mListener.onUpdateFeature(mFeatureContent);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
             VoiceRecordDialog dialog = new VoiceRecordDialog();
-            dialog.setTargetFragment(FtrPitFragment.this, REQ_RECORD_AUDIO);
+            dialog.setTargetFragment(FtrStairsFragment.this, REQ_RECORD_AUDIO);
             dialog.show(getFragmentManager(), "");
         });
         binding.btnAddPhoto.setOnClickListener(v -> {
@@ -213,7 +243,7 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
                             }
 
                             PhotoReviewDialog dialog = PhotoReviewDialog.newInstance(String.valueOf(r.getUri()));
-                            dialog.setTargetFragment(FtrPitFragment.this, REQ_ADD_SUBTITLE_PHOTO);
+                            dialog.setTargetFragment(FtrStairsFragment.this, REQ_ADD_SUBTITLE_PHOTO);
                             dialog.show(getFragmentManager(), "");
                         } else {
                             Toast.makeText(getContext(), "خطا:" + r.getError().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
@@ -228,9 +258,9 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
     }
 
     private void setupPhotoRecycler() {
-        PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrPitFragment.this, factory).get(PhotoListViewModel.class);
+        PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrStairsFragment.this, factory).get(PhotoListViewModel.class);
         photoListViewModel.initial(mFeatureId);
-        photoListViewModel.getPhotoList().observe(FtrPitFragment.this, photos -> {
+        photoListViewModel.getPhotoList().observe(FtrStairsFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
                 mPhotoList.removeAll(mPhotoList);
@@ -265,6 +295,16 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
                 Toast.makeText(getContext(), "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
             }
         }
+        if(requestCode == REQ_ADD_STAIR_DETAIL){
+            if(resultCode==RESULT_OK){
+                FeatureStairDetail stairDetail = data.getParcelableExtra(MyConst.EXTRA_MODEL);
+                mStairDetails.add(stairDetail);
+                mAdapterStairDetail.notifyDataSetChanged();
+                Gson gson = new Gson();
+                mStair.setStairDimensions(mStairDetails);
+                mListener.onUpdateFeature(gson.toJson(mStair));
+            }
+        }
 
     }
 
@@ -297,7 +337,7 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(String featureContentJson);
+        void onUpdateFeature(String mfeatureContentJson);
 
         void onUploadAudio(AudioMemo audio);
 
@@ -425,7 +465,7 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
 
             binding.setAudio(getItem(position));
             binding.setOnAudioClickListener(this);
-            FileViewModel viewModel = ViewModelProviders.of(FtrPitFragment.this, factory).get(FileViewModel.class);
+            FileViewModel viewModel = ViewModelProviders.of(FtrStairsFragment.this, factory).get(FileViewModel.class);
             viewModel.initial(linearLayout.getContext(), BASE_URL + getItem(position).getUrl(), getItem(position).getTitle());
 
             binding.setFile(viewModel.getFileDownloaded());
@@ -468,5 +508,114 @@ public class FtrPitFragment extends androidx.fragment.app.Fragment implements In
 
         }
 
+    }
+
+    private class StairsLLAdapter implements StairsEventListener {
+        LinearLayout linearLayout;
+        List<FeatureStairDetail> arrayList;
+
+        public StairsLLAdapter(List<FeatureStairDetail> arrayList, LinearLayout linearLayout) {
+            this.arrayList = arrayList;
+            this.linearLayout = linearLayout;
+            notifyDataSetChanged();
+        }
+
+        private void notifyDataSetChanged() {
+            linearLayout.removeAllViews();
+            if (arrayList.size() > 0) {
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_ossuary, null);
+                linearLayout.addView(header);
+            }
+            for (int i = 0; i < getCount(); i++) {
+                linearLayout.addView(getView(i, null, linearLayout));
+            }
+        }
+
+        public int getCount() {
+            return arrayList.size();
+        }
+
+        public FeatureStairDetail getItem(int position) {
+            return arrayList.get(position);
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ItemStairBinding binding;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_stair, null);
+                binding = DataBindingUtil.bind(convertView);
+                convertView.setTag(binding);
+            } else {
+                binding = (ItemStairBinding) convertView.getTag();
+            }
+            binding.setStairDetail(getItem(position));
+            binding.setView(binding.tvOptions);
+            binding.setEventListener(StairsLLAdapter.this);
+            binding.setIndex(position);
+            View v = binding.getRoot();
+            convertView.setTag(position);
+            registerForContextMenu(convertView);
+
+            return v;
+
+        }
+
+
+        @Override
+        public void onOptionsClick(FeatureStairDetail stairDetail, int index, View view) {
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(getContext(), view);
+            //inflating menu from xml resource
+            popup.inflate(R.menu.menu_delete_edit);
+
+            //adding click listener
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_edit:
+                        AddEditStairDetailDialog dialog = AddEditStairDetailDialog.newInstance(index, stairDetail);
+                        dialog.setTargetFragment(FtrStairsFragment.this, REQ_EDIT_STAIR_DETAIL);
+                        dialog.show(getFragmentManager(), "");
+                        return true;
+                    case R.id.menu_delete:
+                        TextView titleTV = new TextView(getContext());
+                        titleTV.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        titleTV.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        titleTV.setText("حذف");
+                        int dip = 8;
+                        int px = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip,
+                                getResources().getDisplayMetrics()
+                        );
+                        titleTV.setPadding(px, px, px, px);
+                        new AlertDialog.Builder(getContext())
+                                .setCustomTitle(titleTV)
+                                .setMessage("آیا مایلید این مورد حذف شود؟")
+                                .setPositiveButton("بلی", (dialogInterface, i) -> {
+                                    mStairDetails.remove(index);
+                                    notifyDataSetChanged();
+                                    Gson gson = new Gson();
+                                    mStair.setStairDimensions(mStairDetails);
+                                    mListener.onUpdateFeature(gson.toJson(mStair));
+                                    dialogInterface.dismiss();
+                                })
+                                .setNegativeButton("خیر", (dialogInterface, i) -> dialogInterface.dismiss())
+                                .create().show();
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+            //displaying the popup
+            popup.show();
+        }
+    }
+
+    public interface StairsEventListener {
+        void onOptionsClick(FeatureStairDetail stairDetail, int index, View view);
     }
 }

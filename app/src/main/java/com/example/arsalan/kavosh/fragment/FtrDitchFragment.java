@@ -85,23 +85,24 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
     @Inject
     MyViewModelFactory factory;
     private String mLayerName;
-    private String mFeatureId;
     private PhotoAdapter mGalleryAdapter;
     private ArrayList<Photo> mPhotoList = new ArrayList<Photo>();
     private LLAudioAdapter mAudioAdapter;
     private List<AudioMemo> mAudioLst = new ArrayList<>();
     private String mPhotoLocalPath;
     private OnFragmentInteractionListener mListener;
-    private Feature mFeature;
 
     public FtrDitchFragment() {
         // Required empty public constructor
     }
 
-    public static FtrDitchFragment newInstance(Feature feature) {
+    private String mFeatureId;
+    private String mFeatureContent;
+    public static FtrDitchFragment newInstance(String featureId, String contentJson) {
         FtrDitchFragment fragment = new FtrDitchFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM1, feature);
+        args.putString(ARG_PARAM1, featureId);
+        args.putString(ARG_PARAM2, contentJson);
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,11 +111,10 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mFeature = getArguments().getParcelable(ARG_PARAM1);
-            Log.d(TAG, "onCreate: mfeature ID:" + mFeature.getId());
+            mFeatureId = getArguments().getString(ARG_PARAM1);
+            mFeatureContent = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -122,9 +122,9 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
         FragmentFtrDitchBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_ftr_ditch, container, false);
 
         DitchFeature ditch;
-        if (mFeature.getContentJson() != null && !mFeature.getContentJson().isEmpty()) {
+        if (mFeatureContent != null && !mFeatureContent.isEmpty()) {
             Gson gson = new Gson();
-            ditch = gson.fromJson(mFeature.getContentJson(), DitchFeature.class);
+            ditch = gson.fromJson(mFeatureContent, DitchFeature.class);
         } else {
             ditch = new DitchFeature();
         }
@@ -135,7 +135,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
         mAudioAdapter = new LLAudioAdapter(mAudioLst, binding.llAudioList);
 
         AudioListViewModel audioVM = ViewModelProviders.of(FtrDitchFragment.this, factory).get(AudioListViewModel.class);
-        audioVM.initial(mFeature.getId());
+        audioVM.initial(mFeatureId);
         audioVM.getAudioMemoList().observe(FtrDitchFragment.this, audioMemoList -> {
             mAudioLst.removeAll(mAudioLst);
             mAudioLst.addAll(audioMemoList);
@@ -176,8 +176,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
             public void onPropertyChanged(Observable sender, int propertyId) {
                 Gson gson = new Gson();
                 String contentJson = gson.toJson(ditch);
-                mFeature.setContentJson(contentJson);
-                mListener.onUpdateFeature(mFeature);
+                mListener.onUpdateFeature(mFeatureContent);
             }
         });
         binding.btnAddAudio.setOnClickListener(view -> {
@@ -246,7 +245,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
 
     private void setupPhotoRecycler() {
         PhotoListViewModel photoListViewModel = ViewModelProviders.of(FtrDitchFragment.this, factory).get(PhotoListViewModel.class);
-        photoListViewModel.initial(mFeature.getId());
+        photoListViewModel.initial(mFeatureId);
         photoListViewModel.getPhotoList().observe(FtrDitchFragment.this, photos -> {
             Log.d(TAG, "PhotoListViewModel onChanged: ");
             if (photos != null) {
@@ -263,7 +262,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
         if (requestCode == REQ_RECORD_AUDIO) {
             if (resultCode == RESULT_OK) {
                 AudioMemo audio = new AudioMemo();
-                audio.setAudioable_id(mFeature.getId());
+                audio.setAudioable_id(mFeatureId);
                 audio.setAudioable_type("App\\FEATURE");
                 audio.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 audio.setLocalPath(data.getStringExtra(MyConst.EXTRA_FILE_PATH));
@@ -275,7 +274,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
 
                 Photo photo = new Photo();
                 photo.setLocalPath(mPhotoLocalPath);
-                photo.setPhotoableId(mFeature.getId());
+                photo.setPhotoableId(mFeatureId);
                 photo.setTitle(data.getStringExtra(MyConst.EXTRA_FILE_TITLE));
                 photo.setPhotoableType("App\\FEATURE");
                 mListener.onUploadPhoto(photo);
@@ -314,7 +313,7 @@ public class FtrDitchFragment extends androidx.fragment.app.Fragment implements 
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onUpdateFeature(Feature feature);
+        void onUpdateFeature(String  mfeatureContentJson);
 
         void onUploadAudio(AudioMemo audio);
 

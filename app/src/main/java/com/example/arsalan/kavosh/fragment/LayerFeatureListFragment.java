@@ -141,7 +141,7 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
         mBinding.btnAddLayer.setOnClickListener(view -> {
             mBinding.btnAddLayer.setEnabled(false);
             mBinding.btnAddFeature.setEnabled(false);
-            addNewExcavationLayerWeb(increaseCode(mItemCoding, mLayerFeatureList.size()), mItemId);
+            addNewExcavationLayerWeb( mItemId);
         });
 
         mBinding.btnAddFeature.setOnClickListener(view -> {
@@ -165,6 +165,7 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
             case REQ_ADD_FEATURE:
                 if (resultCode == RESULT_OK) {
                     int structureIndex = data.getIntExtra(MyConst.EXTRA_INDEX, 0);
+                    Log.d(TAG, "onActivityResult: featureStruct:"+structureIndex);
                     CreateNewFeature(increaseCode(mItemCoding, mLayerFeatureList.size()), mItemId, structureIndex);
                 }
                 break;
@@ -237,11 +238,9 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
 
     }
 
-    private void addNewExcavationLayerWeb(String name, String itemId) {
+    private void addNewExcavationLayerWeb( String itemId) {
         Layer layer = new Layer();
-        layer.setName(name);
         LayerFeature layerFeature = new LayerFeature();
-        layerFeature.setName(name);
         layerFeature.setType(1);
         layerFeature.setChildrenId(layer.getId());
         layerFeature.setChildrenType("App\\Layer");
@@ -255,7 +254,6 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
                 .CONNECTED).build();
         Data inputData = new Data.Builder()
                 .putString("id", layerFeature.getId())
-                .putString("name", name)
                 .putString("excavation_item_id", itemId)
                 .putString("type", String.valueOf(1))
                 .putString("status", "1")
@@ -266,7 +264,6 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
 
         Data inputDataLayer = new Data.Builder()
                 .putString("id", layer.getId())
-                .putString("name", name)
                 .build();
 
         OneTimeWorkRequest LayerFeatureUploadWork = new OneTimeWorkRequest.Builder(LayerFeatureSaveWorker.class)
@@ -411,7 +408,11 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
                 intent.putExtra(MyConst.EXTRA_EXCAVATION_LAYER_FEATURE_ID, layerFeature.getChildrenId());
                 intent.putExtra(MyConst.EXTRA_EXCAVATION_ITEM_ID, layerFeature.getExcavationItemId());
                 intent.putExtra(MyConst.EXTRA_REGISTRATION_CODING, mRegistrationCoding);
-                intent.putExtra(MyConst.EXTRA_CAN_DELETE, layerFeature.getId() == mAdapter.layerFeatures.get(mAdapter.getItemCount() - 1).getId());
+                if(mAdapter.getItemCount()==0) {
+                    intent.putExtra(MyConst.EXTRA_CAN_DELETE, true);
+                }else {
+                    intent.putExtra(MyConst.EXTRA_CAN_DELETE, layerFeature.getId() == mAdapter.layerFeatures.get(mAdapter.getItemCount() - 1).getId());
+                }
                 startActivity(intent);
             } else if (layerFeature.getType() == 2) {
                 Intent intent = new Intent();
@@ -420,7 +421,11 @@ public class LayerFeatureListFragment extends androidx.fragment.app.Fragment imp
                 intent.putExtra(MyConst.EXTRA_EXCAVATION_LAYER_FEATURE_ID, layerFeature.getChildrenId());
                 intent.putExtra(MyConst.EXTRA_EXCAVATION_ITEM_ID, layerFeature.getExcavationItemId());
                 intent.putExtra(MyConst.EXTRA_REGISTRATION_CODING, mRegistrationCoding);
-                intent.putExtra(MyConst.EXTRA_CAN_DELETE, layerFeature.getId() == mAdapter.layerFeatures.get(mAdapter.getItemCount() - 1).getId());
+                if(mAdapter.getItemCount()>0) {
+                    intent.putExtra(MyConst.EXTRA_CAN_DELETE, layerFeature.getId() == mAdapter.layerFeatures.get(mAdapter.getItemCount() - 1).getId());
+                }else {
+                    intent.putExtra(MyConst.EXTRA_CAN_DELETE, true);
+                }
                 startActivity(intent);
             }
         }
