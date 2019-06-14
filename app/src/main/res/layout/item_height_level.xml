@@ -19,9 +19,6 @@
         <variable
             name="index"
             type="Integer" />
-        <import type="java.lang.Double" />
-
-        <import type="java.lang.Integer" />
     </data>
 
     <LinearLayout

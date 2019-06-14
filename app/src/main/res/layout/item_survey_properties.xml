@@ -7,7 +7,6 @@
             name="geoFeature"
             type="com.example.arsalan.kavosh.model.GeoFeature" />
 
-        <import type="java.lang.Integer" />
     </data>
 
     <LinearLayout

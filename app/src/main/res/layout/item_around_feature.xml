@@ -3,12 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="aroundFeature"
             type="com.example.arsalan.kavosh.model.AroundFeature" />
-
-        <import type="java.lang.Integer" />
     </data>
 
     <LinearLayout

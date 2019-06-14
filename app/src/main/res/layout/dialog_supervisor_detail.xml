@@ -4,9 +4,6 @@
     tools:context=".dialog.SupervisorDetailDialog">
 
     <data>
-
-        <import type="java.lang.String" />
-
         <variable
             name="supervisor"
             type="com.example.arsalan.kavosh.model.Supervisor" />
