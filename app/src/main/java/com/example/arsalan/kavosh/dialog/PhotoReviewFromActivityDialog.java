@@ -1,6 +1,7 @@
 package com.example.arsalan.kavosh.dialog;
 
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
@@ -8,10 +9,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.DialogPhotoReviewBinding;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -69,6 +73,15 @@ public class PhotoReviewFromActivityDialog extends DialogFragment {
         });
         binding.btnCancel.setOnClickListener(button -> dismiss());
         return binding.getRoot();
+    }
+
+    //remove title bar from this dialog
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override

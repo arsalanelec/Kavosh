@@ -1,5 +1,6 @@
 package com.example.arsalan.kavosh.dialog;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.arsalan.kavosh.R;
@@ -28,6 +30,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
@@ -94,11 +98,11 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
      * @param projectId Parameter 1.
      * @return A new instance of fragment NewSurveyDialog.
      */
-    public static NewSurveyDialog newInstance(String projectId, String registrarionCode, String codeName, String projectName) {
+    public static NewSurveyDialog newInstance(String projectId, String registrationCode, String codeName, String projectName) {
         NewSurveyDialog fragment = new NewSurveyDialog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, projectId);
-        args.putString(ARG_PARAM2, registrarionCode);
+        args.putString(ARG_PARAM2, registrationCode);
         args.putString(ARG_PARAM3, codeName);
         args.putString(ARG_PARAM4, projectName);
         fragment.setArguments(args);
@@ -114,6 +118,16 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
             codeName = getArguments().getString(ARG_PARAM3);
             mProjectName = getArguments().getString(ARG_PARAM4);
         }
+    }
+
+
+    //remove title bar from this dialog
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override
@@ -317,6 +331,7 @@ public class NewSurveyDialog extends DialogFragment implements View.OnClickListe
 
 
     }
+
 
     private void addNewSurveyItemWeb(String projectId, String name, int type, double easting, double northing, double elevation) {
 

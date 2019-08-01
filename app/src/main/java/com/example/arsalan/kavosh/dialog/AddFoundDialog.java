@@ -1,5 +1,6 @@
 package com.example.arsalan.kavosh.dialog;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.arsalan.kavosh.R;
@@ -15,6 +17,8 @@ import com.example.arsalan.kavosh.model.FoundDetail;
 import com.example.arsalan.kavosh.model.MyConst;
 import com.google.gson.Gson;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -102,6 +106,16 @@ public class AddFoundDialog extends DialogFragment {
         });
         binding.btnCancel.setOnClickListener(view -> dismiss());
         return binding.getRoot();
+    }
+
+
+    //remove title bar from this dialog
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @Override

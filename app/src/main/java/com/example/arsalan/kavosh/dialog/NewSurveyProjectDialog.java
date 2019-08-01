@@ -1,5 +1,6 @@
 package com.example.arsalan.kavosh.dialog;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -30,6 +32,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.work.Constraints;
@@ -120,6 +124,15 @@ public class NewSurveyProjectDialog extends DialogFragment implements View.OnCli
         }
     };
     private String mLicenceNum = "", mRegistrationNum = "";
+
+    //remove title bar from this dialog
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
 
     public NewSurveyProjectDialog() {
         // Required empty public constructor

@@ -1,6 +1,7 @@
 package com.example.arsalan.kavosh.dialog;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,12 +9,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.example.arsalan.kavosh.R;
 import com.example.arsalan.kavosh.databinding.DialogAddHillSideBinding;
 import com.example.arsalan.kavosh.model.Hillside;
 import com.example.arsalan.kavosh.model.MyConst;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -88,6 +92,15 @@ public class AddHillSideDialog extends DialogFragment {
         });
         b.btnCancel.setOnClickListener(btn -> dismiss());
         return b.getRoot();
+    }
+
+    //remove title bar from this dialog
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
 
